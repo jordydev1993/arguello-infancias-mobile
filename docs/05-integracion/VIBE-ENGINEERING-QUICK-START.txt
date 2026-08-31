@@ -1,0 +1,260 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║        🔄 VIBE ENGINEERING QUICK START                              ║
+║        Tu metodología actualizada alineada 100%                     ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+HAS LEÍDO LA GUÍA DE VIBE ENGINEERING. AQUÍ ESTÁ LO QUE FALTA EN TU TRABAJO:
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ LO QUE ESTABAS HACIENDO (sin Vibe):
+
+  Tú: "Claude Code, construir F1"
+       ↓
+  Claude: Código directo
+       ↓
+  Meli: "Revisemos el código... cambia esto y esto"
+       ↓
+  Claude: Reescribe
+       ↓
+  Resultado: 3-4 iteraciones, alto costo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ LO QUE HACES AHORA (con Vibe):
+
+  Tú: "Claude, F1" (+ AGENTS.md + skills/)
+       ↓
+  Claude: PLAN en prompts/01-plan.md
+       ↓
+  Meli: "✓ El plan está OK"
+       ↓
+  Claude: Código del plan
+       ↓
+  Resultado: 1 iteración, bajo costo, control total
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 LO QUE CAMBIA HOY (31/08):
+
+
+1. ⭐ AGENTS.md (el archivo único que comanda todo)
+   └─ Rol + Flujo + Producto + Arquitectura + Stack + Modelo + APIs + Chequeos
+   
+2. 📁 skills/ (herramientas documentadas)
+   ├─ design.md (componentes, colores)
+   ├─ database.md (7 tablas exactas)
+   └─ testing.md (51 criterios)
+   
+3. 📝 prompts/ (donde Claude Code escribe sus PLANES)
+   └─ Tú REVISAS el plan antes de que code
+   
+4. 🔄 Ciclo Vibe (8 pasos simplificados)
+   └─ 1. Lee reglas → 2. Escribe plan → 3. Espera ✓ → 4. Implementa
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 QUÉ HACER HOY (31/08) - 3 HORAS:
+
+
+PASO 1: Copiar AGENTS.md a tu repo (15 min)
+  │
+  ├─ Archivo nuevo: arguello-mobile/AGENTS.md
+  ├─ Contenido: El que está en outputs/AGENTS.md
+  ├─ Git commit: "docs: add AGENTS.md (Vibe Engineering)"
+  └─ ✓ LISTO
+  
+
+PASO 2: Crear carpeta skills/ (1 hora)
+  │
+  ├─ Folder: arguello-mobile/skills/
+  ├─ skills/design.md
+  │  └─ Colores, tipografía, componentes
+  │     (Copia de DESIGN-SYSTEM-ARGUELLO-MOBILE.md)
+  │
+  ├─ skills/database.md
+  │  └─ 7 tablas con restricciones
+  │     (Copia de VALIDACION-MODELO-DATOS-ARGUELLO.md)
+  │
+  ├─ skills/testing.md
+  │  └─ 51 criterios de aceptación
+  │     (Copia de 04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md)
+  │
+  └─ ✓ LISTO
+
+
+PASO 3: Crear carpeta prompts/ (5 min)
+  │
+  ├─ Folder: arguello-mobile/prompts/ (vacía al inicio)
+  ├─ .gitkeep file
+  └─ ✓ LISTO
+
+
+PASO 4: Reescribir BRIEF-CLAUDE-CODE.md (1 hora)
+  │
+  ├─ Cambiar de:
+  │  "Aquí están todas las reglas..."
+  │
+  ├─ Cambiar a:
+  │  "Lee arguello-mobile/AGENTS.md
+  │   Escribe PLAN en prompts/XX-plan.md
+  │   Espera aprobación (✓)
+  │   Implementa
+  │   Corre chequeos"
+  │
+  └─ ✓ LISTO
+
+
+PASO 5: Commit y push (10 min)
+  │
+  ├─ git add AGENTS.md skills/ prompts/
+  ├─ git commit -m "docs: Vibe Engineering setup"
+  ├─ git push origin main
+  └─ ✓ LISTO
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 DOCUMENTOS GENERADOS HOY:
+
+
+1. ANALISIS-VIBE-ENGINEERING.md
+   └─ Qué cambió, por qué funciona
+
+2. AGENTS.md
+   └─ El archivo maestro (537 líneas)
+
+3. WORKFLOW-VIBE-ENGINEERING-31-08.md
+   └─ Paso a paso con ejemplo real
+
+4. Este archivo
+   └─ Resumen rápido para hoy
+
+5. CHECKLIST-TAREAS-31-08-2026.md
+   └─ Ajustado para Vibe Engineering
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔄 EJEMPLO HOY: F1 CONSULTAR RESIDENTES
+
+
+09:00 AM  Standup
+10:00 AM  Envías a Claude Code:
+
+"Eres ingeniero principal.
+
+F1: Consultar residentes
+
+Lee: AGENTS.md, skills/design.md, skills/database.md
+
+Escribe PLAN en prompts/01-plan.md
+NO implementes. Espera ✓"
+
+          ↓
+
+10:30 AM  Claude escribe el plan en prompts/01-plan.md
+          Meli lo revisa (¿cumple los 7 criterios?)
+
+10:35 AM  Meli responde: "✓ Aprobado"
+          Tú ves el ✓ en el chat
+
+10:40 AM  Claude implementa el código
+          Corre chequeos (typecheck, lint, expo start)
+
+11:30 AM  Meli testa, Cami valida UI, Sofi valida BD
+
+11:45 AM  F1 ✅ LISTO
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CHECKLIST PARA HOY:
+
+
+ANTES DE INICIAR (09:00 AM):
+  ☐ Todo el equipo leyó ANALISIS-VIBE-ENGINEERING.md
+  ☐ Entendieron el cambio: revisar PLAN, no código
+  ☐ Conocen los 8 pasos del ciclo
+
+
+DURANTE (09:00-14:00):
+  
+  JORDY:
+  ☐ Copié AGENTS.md a repo
+  ☐ Copié skills/ completo
+  ☐ Creé folder prompts/
+  ☐ Actualicé BRIEF-CLAUDE-CODE.md
+  ☐ Git commit & push
+  ☐ Revisé y aprobé el plan de F1
+  
+  MELI:
+  ☐ Leí AGENTS.md
+  ☐ Entiendo el workflow de planes
+  ☐ Revisor de plan de F1 (validé 7 criterios)
+  ☐ Testé resultado final
+  
+  CAMI:
+  ☐ Copié design tokens a skills/design.md
+  ☐ Revisé que plan usa colores/tipografía
+  ☐ Validé resultado UI
+  
+  SOFI:
+  ☐ Copié modelo datos a skills/database.md
+  ☐ Revisor de plan BD (correcto índices/RLS)
+  ☐ Validé auditoría funciona
+
+
+ANTES DE TERMINAR (17:00):
+  ☐ AGENTS.md en repo
+  ☐ skills/ completo
+  ☐ prompts/01-* creados
+  ☐ F1 ✅ Consultable
+  ☐ Documentación actualizada
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 VENTAJAS AHORA:
+
+✓ CONTROL: Tú apruebas el plan ANTES de código
+✓ REUTILIZABLE: AGENTS.md vale para todos los Features
+✓ MODULAR: Otros pueden leer skills/ sin 20 docs
+✓ RÁPIDO: Prompts cortos, planes optimizados
+✓ HISTÓRICO: prompts/ es registro de decisiones
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📍 PRÓXIMO:
+
+Mañana (01/09): Iniciar F1 + F2 con Vibe completo
+
+  1️⃣ Prompt a Claude Code
+  2️⃣ Plan en prompts/
+  3️⃣ Meli revisa (5 min)
+  4️⃣ ✓ Aprobado
+  5️⃣ Claude implementa
+  6️⃣ Verificación final
+
+
+═══════════════════════════════════════════════════════════════════════
+
+              ARCHIVOS CLAVE HOY:
+
+    1. AGENTS.md (537 líneas - el comandante)
+    2. skills/design.md
+    3. skills/database.md
+    4. skills/testing.md
+    5. prompts/ (vacía al inicio)
+
+═══════════════════════════════════════════════════════════════════════
+
+                    ¡IMPLEMENT HOY! 🚀
+
+═══════════════════════════════════════════════════════════════════════
+

@@ -42,3 +42,6 @@ example
 # generated native folders
 /ios
 /android
+
+# stray folder from old setup script
+arguello-mobile/

@@ -1,6 +1,6 @@
 /**
  * Enumeraciones y catálogos compartidos por tipos, schemas Zod y UI.
- * Fuente: docs/03-ARGUELLO-MOBILE-FEATURES.md
+ * Fuente: docs/02-especificaciones/03-ARGUELLO-MOBILE-FEATURES.md
  */
 
 export const OBSERVATION_CATEGORIES = [

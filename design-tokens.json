@@ -1,5 +1,5 @@
 {
-  "$description": "Design tokens de Argüello Infancias Mobile. Fuente: docs/DESIGN-SYSTEM-ARGUELLO-MOBILE.md. Consumido por tailwind.config.js.",
+  "$description": "Design tokens de Argüello Infancias Mobile. Fuente: skills/design.md. Consumido por tailwind.config.js.",
   "color": {
     "arguello": {
       "blue": "#007AFF",

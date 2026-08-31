@@ -1,750 +1,539 @@
-# AGENTS-MOBILE.md — Argüello Infancias Mobile (Unificado)
+# AGENTS.md — Argüello Infancias Mobile
 
-**Aplicación móvil para el acompañamiento diario de NNA en residencias bajo protección judicial.**
-
-> Lee primero **AGENTS.md** para entender el contexto general, principios de seguridad y procesos compartidos.
+**El único archivo de reglas que necesitas. Leeré esto antes de cada tarea.**
 
 ---
 
-## 📌 PROYECTO GENERAL
+## [1] ROL + FLUJO DE TRABAJO
 
-**Argüello Infancias Mobile** es parte del **Sistema de Gestión para Residencia de NNA "Argüello Infancias"**, desarrollado como Trabajo Final/Tesis en el marco de **Aplicación Móvil mediante Aprendizaje Basado en Proyectos (ABP)**.
+Eres ingeniero principal con 10+ años en arquitectura de apps.
 
-La aplicación móvil es **complemento** del sistema web institucional, NO reemplaza.
+**Para cada funcionalidad que te pida, hazlo así (sin excepción):**
 
----
+1. **Lee las reglas:** Este archivo (AGENTS.md) + la skill relevante en `skills/` (`design.md`, `testing.md`, `database.md`). Documentación del proyecto: `docs/00-INDICE.md`.
+2. **Inspecciona:** El código actual en `src/`
+3. **Escribe un PLAN:** Guárdalo en `prompts/XX-nombre-plan.md`
+   - Qué archivos modificas/creas
+   - Qué APIs llamas
+   - Qué datos trae la BD
+   - Cómo cumples los criterios
+   - Qué chequeos corres después
+4. **Espera aprobación:** Yo digo "✓ Aprobado" o "✕ Cambiar X"
+5. **Implementa:** Escribe el código del plan
+6. **Chequea:** Corre TODOS los chequeos (typecheck, lint, tests)
+7. **Reporta:** "Pasos exactos para probar esto"
 
-## 🎯 OBJETIVO GENERAL
-
-Construir una **aplicación móvil funcional e incremental** que digitalice el **acompañamiento diario de NNA en la residencia**.
-
-La aplicación debe permitir que educadores y operadores convivenciales:
-
-✅ Consultar información de residentes  
-✅ Registrar novedades durante el turno  
-✅ Consultar historial de seguimiento  
-✅ Registrar actividades diarias  
-✅ Consultar novedades y tareas del turno  
-✅ Reportar situaciones críticas  
-
-**Priorizando:** Simplicidad, Usabilidad, Trazabilidad, Seguridad, Claridad, Integración, Desarrollo Incremental
+**No saltees el PLAN. Nunca.**
 
 ---
 
-## 📱 PROPÓSITO MÓVIL vs WEB
+## [2] PRODUCTO: DENTRO / FUERA DE ALCANCE
 
-### Argüello Infancias Web (Sistema Principal)
+**Qué es:**  
+Sistema móvil para acompañamiento diario de NNA en residencias bajo protección judicial. 6 funcionalidades core, MVP en 2-3 semanas.
 
-```
-Usuarios: Dirección, Técnicos, Psicología, Trabajo Social, Admin
-Responsabilidades: Gestión completa, legajos, informes, auditoría, decisiones institucionales
-```
+**Dentro de alcance:**
+- ✅ F1: Consultar información de residentes asignados
+- ✅ F2: Registrar novedades (incidencias diarias)
+- ✅ F3: Consultar historial de seguimiento
+- ✅ F4: Registrar actividades diarias
+- ✅ F5: Consultar turno y tareas de hoy
+- ✅ F6: Reportar situación crítica (emergencias)
 
-### Argüello Infancias Mobile (Complemento)
-
-```
-Usuarios: Educadores, Operadores convivenciales
-Responsabilidades: Acompañamiento diario, registro de actividades, novedades, turno
-```
-
-### Arquitectura General
-
-```
-                 SISTEMA DE RESIDENCIA
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-         SISTEMA WEB           ARGÜELLO INFANCIAS MOBILE
-              │                     │
-       Gestión institucional    Trabajo diario
-              │                     │
-              └──────────┬──────────┘
-                         │
-            SUPABASE (PostgreSQL)
-           - Datos compartidos
-           - Auditoría única
-           - RLS policies
-```
+**Fuera de alcance (NO sobreconstruir):**
+- ❌ Comentarios o réplicas en novedades
+- ❌ Multimedia (video, audio) — solo foto estática
+- ❌ Notificaciones push (v2)
+- ❌ Modo offline con sync automático (v2)
+- ❌ Compartir en redes sociales
+- ❌ Gamificación o puntos
+- ❌ Video llamadas (v2)
+- ❌ Generación de reportes PDF/Excel (v2)
 
 ---
 
-## 🛠️ STACK TÉCNICO MÓVIL
-
-### Frontend Mobile
+## [3] ARQUITECTURA
 
 ```
-- Expo (managed service)
-- React Native + TypeScript (strict mode)
-- Expo Router (file-based routing)
-- NativeWind (Tailwind CSS en React Native)
-- Zustand (estado global)
-- React Query (data fetching + cache)
-- AsyncStorage (persistencia local)
-- Supabase Client (auth + realtime)
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  EXPO / REACT NATIVE (Cliente móvil)           │
+│  - Pantallas (app/(tabs)/, app/(auth)/)        │
+│  - Componentes reutilizables                    │
+│  - Estado Zustand                               │
+│  - Supabase Client (JWT automático)            │
+│                                                 │
+└────────────────────┬────────────────────────────┘
+                     │ HTTP fetch
+                     ↓
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  EXPRESS.JS SERVERLESS (API)                   │
+│  - Routes: POST/GET /api/*                     │
+│  - Valida JWT (Supabase)                       │
+│  - RBAC: educador vs coordinador               │
+│  - Queries preparadas (sin inyección SQL)      │
+│                                                 │
+└────────────────────┬────────────────────────────┘
+                     │ SQL prepared
+                     ↓
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  SUPABASE POSTGRESQL (Datos)                   │
+│  - 7 tablas (residentes, novedades, ...)       │
+│  - RLS policies por rol                         │
+│  - Audit log centralizado                      │
+│  - Triggers automáticos                        │
+│                                                 │
+└─────────────────────────────────────────────────┘
 ```
 
-### Shared Backend (Común con Web)
-
-```
-- Node.js 20+ + Express.js + TypeScript
-- PostgreSQL 15+ (Supabase managed)
-- Passport.js + JWT + TOTP (MFA)
-- crypto-js (AES-256 encryption)
-- zod (validación lado servidor)
-- winston (logging)
-```
-
-### Seguridad Mobile-Specific
-
-```
-- Expo SecureStore (almacenar JWT)
-- No guardar datos sensibles en AsyncStorage
-- Descartar tokens al logout
-- Timeout sesión: 30 min inactividad
-- Certificate pinning (si aplica)
-```
+**Reglas arquitectura:**
+- 🔒 Secretos NUNCA en cliente (Expo)
+- 🔒 Tokens JWT en Expo SecureStore
+- 🔒 Validación de entrada en servidor, no en cliente
+- 🔒 RBAC: RLS policies en BD, no en API
+- 🔒 Audit log: TODOS los cambios en novedades/criticas
 
 ---
 
-## 🏗️ ARQUITECTURA MOBILE
+## [4] STACK TÉCNICO + PROHIBICIONES
 
-```
-┌─────────────────────────────────────┐
-│    DISPOSITIVO MÓVIL (Cliente)      │
-│  React Native + Expo + TypeScript    │
-│  - UI nativa (iOS + Android)        │
-│  - Datos temporales en memoria      │
-│  - AsyncStorage para cache local    │
-│  - NO datos sensibles en disco      │
-└──────────────┬──────────────────────┘
-               │ HTTPS + JWT + MFA
-               ▼
-         (Mismo Backend que Web)
-     ┌──────────────────────────────┐
-     │  NODE.JS + EXPRESS           │
-     │  - Validación (Zod)          │
-     │  - Auditoría                 │
-     │  - Cifrado/Descifrado        │
-     │  - RBAC middleware           │
-     └──────────────────────────────┘
-               │
-               ▼
-     ┌──────────────────────────────┐
-     │  PostgreSQL (Supabase)       │
-     │  - Datos compartidos          │
-     │  - Audit log inmutable        │
-     │  - RLS policies              │
-     └──────────────────────────────┘
-```
+**USAR SIEMPRE:**
 
----
+Frontend Mobile:
+- `Expo 50+` (managed service, no bare workflow)
+- `React Native` con TypeScript (modo strict)
+- `Expo Router` para navegación (no React Navigation)
+- `NativeWind 2.x` + Tailwind CSS 3.x (no StyleSheet)
+- `Zustand` para estado global (no Redux, no Context)
+- `@supabase/supabase-js` para auth + DB
+- `Poppins` font (descargada en assets/)
 
-## 📊 DATOS DISPONIBLES EN MOBILE
+Backend Compartido:
+- `Node.js 20+` runtime
+- `Express.js` (no Next.js, no Fastify)
+- `TypeScript` (modo strict)
+- `Supabase PostgreSQL 15+` (no otra DB)
+- `JWT + TOTP` para auth (Supabase auth)
+- `zod` para validación
+- `winston` para logs
 
-Mobile accede a **lectura/escritura limitada** de:
-
-```
-✅ Información de residentes (lectura)
-   - Nombres, edad, foto, datos básicos
-   - NO: DNI, salud complejos (web)
-
-✅ Tareas diarias (lectura/escritura)
-   - Ver tareas → Completar tarea
-
-✅ Observaciones/Novedades (lectura/escritura)
-   - Registrar novedad
-   - Ver historial (últimos 30 días)
-
-✅ Actividades diarias (lectura/escritura)
-   - Registrar tipo, estado, observaciones
-
-✅ Medicación (lectura/escritura limitada)
-   - Ver medicamentos activos
-   - Registrar administración
-   - NO: modificar medicamentos
-
-✅ Información del turno (lectura)
-   - Tareas pendientes, novedades 24h, alertas
-
-✅ Situaciones críticas (lectura/escritura)
-   - Reportar situación
-   - Ver estado de reportes
-
-❌ Auditoría (no acceso en mobile)
-❌ Reportes institucionales (web only)
-❌ Crear/modificar usuarios (web/admin)
-```
+**NO USAR NUNCA:**
+- ❌ Redux (usar Zustand)
+- ❌ Context API (usar Zustand)
+- ❌ Clerk, Firebase Auth (solo Supabase)
+- ❌ Axios (solo fetch)
+- ❌ GraphQL (solo REST)
+- ❌ React Query (estado local → Zustand)
+- ❌ react-hook-form (formularios simples, no lib)
+- ❌ Tailwind UI (usar design tokens propios)
 
 ---
 
-# 6️⃣ LAS 6 FEATURES
+## [5] MODELO DE DATOS
 
-## Feature 1 — Consultar información de residentes
+**7 tablas. Todas son obligatorias para MVP.**
 
-**Objetivo:** Acceder rápidamente a datos básicos de NNA asignados.
+**Lee: `skills/database.md`** para la validación completa: restricciones `CHECK`, índices, RLS por rol y audit log. Material de trabajo del modelado en `docs/04-backend/modelo-de-datos/`.
 
-**Flujo:**
+### Tabla: perfiles_usuarios
+
 ```
-Inicio → Residentes → Seleccionar NNA → Detalle
+id          UUID (PK → auth.users.id) ON DELETE RESTRICT
+nombre      VARCHAR(255) NOT NULL
+rol         VARCHAR(50) CHECK (rol IN ('educador', 'coordinador'))
+created_at  TIMESTAMPTZ DEFAULT NOW()
 ```
 
-**Datos visualizados:**
-- Nombre, edad, foto
-- Datos de contacto emergencia
-- Estado actual
-- Obra social
-
-**Validación:** Solo NNA asignados al educador (RBAC)
-
-**Wireframes:** WF-03 (listado), WF-04 (detalle)  
-**Criterios:** CA-01 a CA-07 (7 criterios)
+Regla: Un educador solo ve residentes asignados via residentes_turnos.
 
 ---
 
-## Feature 2 — Registrar novedades del turno
+### Tabla: residentes
 
-**Objetivo:** Crear registro inmediato de eventos/cambios durante turno.
-
-**Flujo:**
 ```
-Residentes → NNA → Nueva novedad → Registrar → Confirmar
+id                      UUID (PK)
+nombre                  VARCHAR(255) NOT NULL
+foto_url                TEXT NULL (almacenado en Supabase Storage)
+fecha_nacimiento        DATE NOT NULL
+escuela                 VARCHAR(255) NULL
+turno_escolar           VARCHAR(50) CHECK (turno_escolar IN ('Mañana', 'Tarde', 'Noche', 'Doble Jornada'))
+observaciones_autorizadas TEXT NULL
+alertas_importantes     TEXT NULL (ej: alergias, medicación)
+created_at              TIMESTAMPTZ DEFAULT NOW()
+deleted_at              TIMESTAMPTZ NULL (soft delete)
 ```
 
-**Datos requeridos:**
-- NNA (seleccionado)
-- Tipo (desplegable: conducta, emocional, educativo, sanitario, otro)
-- Descripción (textarea, min 10 caracteres)
-- Fecha/hora (automática)
-- Usuario responsable (automático)
-
-**Validación:**
-- Tipo obligatorio
-- Descripción mínimo 10 caracteres
-- NNA válido
-
-**Importante:** Una vez registrada, NO se puede editar (trazabilidad)
-
-**Wireframes:** WF-05 (registro), WF-06 (confirmación)  
-**Criterios:** CA-08 a CA-17 (10 criterios)
+Regla: Nunca eliminar residente físicamente (soft delete via deleted_at).
 
 ---
 
-## Feature 3 — Consultar historial de seguimiento
+### Tabla: turnos_trabajo
 
-**Objetivo:** Ver registros cronológicos de un NNA.
-
-**Flujo:**
 ```
-Residentes → NNA → Historial → Lista ordenada
+id          UUID (PK)
+nombre      VARCHAR(100) CHECK (nombre IN ('Mañana', 'Tarde', 'Noche'))
+hora_inicio TIME NOT NULL
+hora_fin    TIME NOT NULL
+created_at  TIMESTAMPTZ DEFAULT NOW()
 ```
 
-**Datos mostrados:**
-- Fecha/hora
-- Tipo de registro
-- Descripción
-- Usuario responsable
-- Estado
-
-**Orden:** Descendente (más recientes primero)  
-**Diferenciación:** Separadores entre días diferentes
-
-**Wireframes:** WF-07 (lista), WF-08 (detalle)  
-**Criterios:** CA-18 a CA-24 (7 criterios)
+Regla: Solo 3 turnos. Inmutable después de MVP.
 
 ---
 
-## Feature 4 — Registrar actividades diarias
+### Tabla: residentes_turnos
 
-**Objetivo:** Documentar actividades completadas/pendientes durante turno.
-
-**Flujo:**
 ```
-Residentes → NNA → Actividades → Registrar/Actualizar → Guardar
+residente_id UUID (FK → residentes.id) ON DELETE CASCADE
+turno_id     UUID (FK → turnos_trabajo.id) ON DELETE CASCADE
+PK: (residente_id, turno_id)
 ```
 
-**Tipos de actividades:**
-- Asistencia escolar
-- Actividad recreativa
-- Actividad deportiva
-- Comida
-- Actividad pedagógica
-- Turno médico
-- Otra
-
-**Estados:**
-- Pendiente
-- Realizada
-- No realizada
-
-**Datos:**
-- Actividad (tipo)
-- Estado
-- Observaciones (opcional)
-- Duración (opcional)
-- Participantes (opcional)
-- Fecha/hora (automática)
-
-**Wireframes:** WF-09 (lista), WF-10 (registro)  
-**Criterios:** CA-25 a CA-32 (8 criterios)
+Regla: Un residente puede estar en 1+ turnos. Un turno tiene N residentes.
 
 ---
 
-## Feature 5 — Consultar novedades y tareas del turno
+### Tabla: novedades
 
-**Objetivo:** Visión consolidada del turno (qué pasó, qué hay que hacer, qué alertas).
-
-**Flujo:**
 ```
-Inicio → Mi turno → Ver secciones consolidadas
+id              UUID (PK)
+residente_id    UUID (FK → residentes.id) NOT NULL ON DELETE CASCADE
+usuario_id      UUID (FK → perfiles_usuarios.id) NOT NULL ON DELETE RESTRICT
+tipo_novedad    VARCHAR(100) CHECK (tipo_novedad IN ('Salud', 'Educación', 'Comportamiento', 'Alimentación', 'Visita Familiar', 'Otro'))
+descripcion     TEXT NOT NULL (nunca vacío)
+fecha_hora      TIMESTAMPTZ DEFAULT NOW()
+deleted_at      TIMESTAMPTZ NULL (soft delete)
+created_at      TIMESTAMPTZ DEFAULT NOW()
 ```
 
-**Secciones:**
+**Índices:**
+- `idx_novedades_residente_fecha (residente_id, fecha_hora DESC)`
+- `idx_novedades_usuario (usuario_id)`
 
-1. **Turno Actual**
-   - Horario inicio/fin
-   - Educador responsable
-   - NNA a cargo
-
-2. **Novedades Relevantes**
-   - Últimas 24h
-   - Alertas
-   - Cambios de estado
-
-3. **Tareas Pendientes**
-   - Medicación
-   - Turnos médicos
-   - Actividades programadas
-
-4. **Información Turno Anterior**
-   - Resumen novedades
-   - Situaciones pendientes
-   - Recomendaciones
-
-**Wireframes:** WF-11 (turno), WF-12 (detalle elemento)  
-**Criterios:** CA-33 a CA-40 (8 criterios)
+Regla crítica: Nunca guardar novedad sin descripcion. SEMPRE with timestamp.
 
 ---
 
-## Feature 6 — Reportar situación crítica
+### Tabla: actividades_diarias
 
-**Objetivo:** Registro diferenciado de situaciones que requieren atención especial.
-
-**Flujo:**
 ```
-Inicio → Situación Crítica → Advertencia → Formulario → Confirmar
+id              UUID (PK)
+residente_id    UUID (FK → residentes.id) NOT NULL ON DELETE CASCADE
+tipo_actividad  VARCHAR(100) CHECK (tipo_actividad IN ('Colegio', 'Recreativa', 'Deportiva', 'Taller', 'Turno Médico', 'Otra'))
+descripcion     TEXT NULL
+realizada       BOOLEAN DEFAULT FALSE
+fecha           DATE DEFAULT CURRENT_DATE
+usuario_id      UUID (FK → perfiles_usuarios.id) NULL ON DELETE SET NULL
+deleted_at      TIMESTAMPTZ NULL (soft delete)
+created_at      TIMESTAMPTZ DEFAULT NOW()
 ```
 
-**Tipos de situaciones críticas:**
-- Violencia (entre residentes, auto-lesiones)
-- Crisis emocional
-- Accidente
-- Fuga
-- Emergencia sanitaria
-- Otra
+**Índices:**
+- `idx_actividades_residente_fecha (residente_id, fecha DESC)`
 
-**Datos requeridos:**
-- NNA involucrado(s)
-- Tipo de situación
-- Descripción detallada (mínimo 20 caracteres)
-- Acciones tomadas
-- Personas notificadas
-
-**Validación:**
-- Tipo obligatorio
-- Descripción mínimo 20 caracteres
-- Confirmación previa a guardar
-
-**Diferenciación Visual:**
-- Color: Rojo (#DC3545)
-- Ícono: ⚠️
-- Acceso prominente desde Inicio
-- Advertencia previa (confirmación)
-
-**Wireframes:** WF-13 (advertencia), WF-14 (registro), WF-15 (confirmación)  
-**Criterios:** CA-41 a CA-51 (11 criterios)
+Regla: Una actividad está pendiente o realizada. Sin estados intermedios.
 
 ---
 
-## 📋 Resumen de Features
+### Tabla: situaciones_criticas
 
-| ID | Feature | Objetivo | Lectura | Escritura | Actor |
-|---|---|---|---|---|---|
-| F1 | Consultar residentes | Ver datos NNA | ✅ | ❌ | Educador |
-| F2 | Registrar novedades | Documentar eventos | ❌ | ✅ | Educador |
-| F3 | Consultar historial | Ver seguimiento | ✅ | ❌ | Educador |
-| F4 | Registrar actividades | Documentar actividades | ✅ | ✅ | Educador |
-| F5 | Consultar turno | Resumen operativo | ✅ | ❌ | Educador |
-| F6 | Situación crítica | Registrar emergencias | ❌ | ✅ | Educador |
+```
+id              UUID (PK)
+residente_id    UUID (FK → residentes.id) NOT NULL ON DELETE RESTRICT
+usuario_id      UUID (FK → perfiles_usuarios.id) NOT NULL ON DELETE RESTRICT
+tipo_situacion  VARCHAR(100) CHECK (tipo_situacion IN ('Violencia', 'Crisis Emocional', 'Accidente', 'Fuga', 'Emergencia Sanitaria'))
+descripcion     TEXT NOT NULL
+fecha_hora      TIMESTAMPTZ DEFAULT NOW()
+created_at      TIMESTAMPTZ DEFAULT NOW()
+```
+
+**Índices:**
+- `idx_criticas_residente_fecha (residente_id, fecha_hora DESC)`
+
+Regla crítica: Auditoría obligatoria (nunca borrar). Timestamp automático.
 
 ---
 
-# 🏗️ ESTRUCTURA DEL PROYECTO
+### Tabla: audit_log
 
 ```
-arguello-infancias-mobile/
-├── app/
-│   ├── (auth)/
-│   │   ├── login.tsx
-│   │   └── _layout.tsx
-│   ├── (tabs)/
-│   │   ├── _layout.tsx
-│   │   ├── inicio.tsx
-│   │   ├── residentes.tsx
-│   │   ├── turno.tsx
-│   │   └── critica.tsx
-│   ├── residentes/
-│   │   ├── [id].tsx
-│   │   └── [id]/
-│   │       ├── novedades.tsx
-│   │       ├── historial.tsx
-│   │       └── actividades.tsx
-│   └── _layout.tsx
-├── components/
-│   ├── ResidentCard.tsx
-│   ├── ActivityCard.tsx
-│   ├── AlertCard.tsx
-│   ├── buttons/
-│   │   ├── PrimaryButton.tsx
-│   │   ├── SecondaryButton.tsx
-│   │   └── CriticalButton.tsx
-│   └── common/
-│       ├── LoadingState.tsx
-│       ├── EmptyState.tsx
-│       └── ErrorState.tsx
-├── hooks/
-│   ├── useAuth.ts
-│   ├── useResidents.ts
-│   ├── useActivities.ts
-│   ├── useObservations.ts
-│   └── useShiftInfo.ts
-├── lib/
-│   ├── supabase.ts
-│   ├── api.ts
-│   ├── auth.ts
-│   ├── storage.ts
-│   └── validation.ts
-├── store/
-│   ├── authStore.ts
-│   ├── residentStore.ts
-│   ├── uiStore.ts
-│   └── offlineStore.ts
-├── types/
-│   ├── resident.ts
-│   ├── activity.ts
-│   ├── observation.ts
-│   ├── task.ts
-│   └── user.ts
-├── utils/
-│   ├── formatters.ts
-│   ├── validators.ts
-│   └── constants.ts
-├── app.json
-├── package.json
-├── tsconfig.json
-└── eas.json
+id              UUID (PK)
+tabla_nombre    VARCHAR(100) NOT NULL
+registro_id     UUID NOT NULL
+operacion       VARCHAR(20) CHECK (operacion IN ('CREATE', 'UPDATE', 'DELETE'))
+usuario_id      UUID (FK → perfiles_usuarios.id) ON DELETE RESTRICT
+datos_antes     JSONB NULL
+datos_despues   JSONB NULL
+fecha_hora      TIMESTAMPTZ DEFAULT NOW()
+```
+
+**Índices:**
+- `idx_audit_tabla_fecha (tabla_nombre, fecha_hora DESC)`
+- `idx_audit_usuario (usuario_id)`
+
+Regla: Triggers automáticos en novedades, criticas, actividades, residentes.
+
+---
+
+## [6] CONTRATOS DE API
+
+**Base URL:** `https://[supabase-project].functions.supabase.co/api` (serverless)
+
+---
+
+### GET /api/residentes
+
+**Input:**
+```json
+{
+  "assigned_to_me": true,      // opcional: true = solo asignados al educador
+  "limit": 50,                  // opcional: default 20
+  "offset": 0                   // opcional: para paginación
+}
+```
+
+**Output (200):**
+```json
+{
+  "residentes": [
+    {
+      "id": "uuid",
+      "nombre": "María García",
+      "edad": 12,                        // calculado de fecha_nacimiento
+      "foto_url": "https://...",
+      "alertas_importantes": "Alérgica a..."
+    }
+  ],
+  "total": 42
+}
+```
+
+**Errors:**
+- `401 Unauthorized` - sin JWT
+- `403 Forbidden` - educador pide residentes no asignados
+
+---
+
+### POST /api/novedades
+
+**Input:**
+```json
+{
+  "residente_id": "uuid",
+  "tipo_novedad": "Salud",       // uno de: Salud, Educación, Comportamiento, Alimentación, Visita Familiar, Otro
+  "descripcion": "Se cayó en el patio"
+}
+```
+
+**Output (201):**
+```json
+{
+  "id": "uuid",
+  "fecha_hora": "2026-08-31T14:30:00Z",
+  "usuario_id": "uuid"           // el del JWT
+}
+```
+
+**Errors:**
+- `400 Bad Request` - descripcion vacía
+- `401 Unauthorized` - sin JWT
+- `403 Forbidden` - no tiene permiso registrar para ese residente
+
+---
+
+### GET /api/residentes/:id/timeline
+
+**Input:**
+```
+?days=30     // últimos 30 días (default)
+```
+
+**Output (200):**
+```json
+{
+  "residentes_id": "uuid",
+  "timeline": [
+    {
+      "id": "uuid",
+      "tipo": "Salud",
+      "descripcion": "Se cayó",
+      "fecha_hora": "2026-08-31T14:30:00Z",
+      "registrado_por": "Jordy García"
+    }
+  ]
+}
 ```
 
 ---
 
-# 🔐 SEGURIDAD MOBILE-SPECIFIC
+### POST /api/actividades
 
-### Obligatorios
-
-- ✅ **Autenticación:** JWT + MFA (TOTP)
-- ✅ **Almacenamiento seguro:** SecureStore para tokens (NO AsyncStorage)
-- ✅ **Cifrado:** AES-256 para datos sensibles
-- ✅ **HTTPS:** Siempre en producción
-- ✅ **Rate limiting:** 5 intentos fallidos → esperar 5 min
-- ✅ **RBAC:** Educador ve SOLO NNA asignados
-- ✅ **Timeouts:** 30 min inactividad
-- ✅ **Auditoría:** Toda acción registrada
-
-### Nunca Exponer
-
-- ❌ DATABASE_URL
-- ❌ JWT_SECRET
-- ❌ ENCRYPTION_KEY
-- ❌ Tokens en localStorage
-- ❌ Contraseñas en logs
-
-### Offline & Sync
-
+**Input:**
+```json
+{
+  "residente_id": "uuid",
+  "tipo_actividad": "Colegio",   // uno de: Colegio, Recreativa, Deportiva, Taller, Turno Médico, Otra
+  "descripcion": "Matemáticas"   // opcional
+}
 ```
-Usuario sin conexión:
-1. Registra novedad localmente (AsyncStorage)
-2. UI muestra "✓ Guardado (offline)"
-3. Cuando vuelve conexión:
-   → Auto-retry POST /api/minors/:id/observations
-   → Sincroniza datos
-   → Muestra "✓ Sincronizado"
+
+**Output (201):**
+```json
+{
+  "id": "uuid",
+  "realizada": false,
+  "fecha": "2026-08-31"
+}
 ```
 
 ---
 
-# 📡 ENDPOINTS API (Compartidos con Web)
+### PATCH /api/actividades/:id
 
-Mobile usa **mismos endpoints que web**, pero con RBAC:
-
+**Input:**
+```json
+{
+  "realizada": true             // marcar como hecha
+}
 ```
-GET /api/minors?filter=assigned_to_me
-  - Solo residentes asignados al educador
-  - Filtro automático por JWT
 
-POST /api/minors/:id/observations
-  - Educador crea observaciones
-  - Auditoría registra
-
-PATCH /api/tasks/:id
-  - Educador actualiza status (no reasigna)
-
-GET /api/minors/:id/medications?active=true
-  - Lectura solamente
-
-POST /api/minors/:id/critical-incidents
-  - Crear reporte crítico
-  - Auditoría inmediata
-```
+**Output (200):** La actividad actualizada
 
 ---
 
-# 🧪 TESTING
+### GET /api/my-shift
 
-### Tipos de Tests
-
-- **Unit:** Validadores Zod, formatters (Jest)
-- **Integration:** API calls + BD mock (Jest + Supertest)
-- **E2E:** Flujos usuario (Detox o Maestro)
-
-### Casos Críticos
-
-- [ ] Login + MFA en mobile
-- [ ] Offline → registrar → online → sync
-- [ ] Ver SOLO residentes asignados
-- [ ] Rate limiting funciona
-- [ ] Logout limpia todo
-
-### Coverage de Criterios
-
-Cada criterio CA-01 a CA-51 debe tener un test asociado.
-
----
-
-# 📱 COMPONENTES REUTILIZABLES
-
-### ResidentCard
-- Foto, nombre, edad, estado
-- Clickeable → detalle
-
-### ActivityCard
-- Icono tipo, hora, descripción
-- Badge estado
-
-### AlertCard
-- Fondo rojo/naranja según severidad
-- Mensaje + acción
-
-### Buttons
-- **PrimaryButton:** Acciones principales (verde/azul)
-- **SecondaryButton:** Alternativas (gris)
-- **CriticalButton:** Situaciones críticas (rojo)
-
-### Loading/Empty/Error
-- LoadingState: Spinner + "Cargando..."
-- EmptyState: Icono + "No hay datos"
-- ErrorState: ⚠️ + mensaje + Reintentar
-
----
-
-# 🔄 FLUJOS PRINCIPALES
-
-## F1 — Consultar Residentes
-
-```
-INICIO
-  ├─ Click "Residentes"
-  ▼
-LISTADO (WF-03)
-  ├─ Click residente
-  ▼
-DETALLE (WF-04)
-  └─ Click "Atrás" → LISTADO
-```
-
-## F2 — Registrar Novedad
-
-```
-DETALLE RESIDENTE
-  ├─ Click "Nueva novedad"
-  ▼
-REGISTRO (WF-05)
-  ├─ Completa datos
-  ├─ Valida
-  ▼
-CONFIRMAR (WF-06)
-  ├─ Click "Confirmar"
-  ▼
-GUARDAR + Vuelve a DETALLE
-```
-
-## F6 — Situación Crítica
-
-```
-INICIO
-  ├─ Click "⚠️ SITUACIÓN CRÍTICA"
-  ▼
-ADVERTENCIA (WF-13)
-  ├─ Mensaje confirmación
-  ├─ Click "Continuar"
-  ▼
-REGISTRO (WF-14)
-  ├─ Completa datos
-  ▼
-CONFIRMAR (WF-15)
-  ├─ Click "CONFIRMAR REPORTE" (rojo)
-  ▼
-GUARDAR + Vuelve a INICIO
+**Output (200):**
+```json
+{
+  "turno": {
+    "nombre": "Mañana",
+    "hora_inicio": "06:00",
+    "hora_fin": "14:00"
+  },
+  "residentes_asignados": [...],
+  "novedades_24h": [...],
+  "actividades_pendientes": [...]
+}
 ```
 
 ---
 
-# 🎯 PRINCIPIOS DE DESARROLLO
+### POST /api/situaciones-criticas
 
-## No Pantallas, Sino Features
-
-❌ INCORRECTO: "Pantalla de residentes", "Pantalla de novedades"  
-✅ CORRECTO: "Consultar residentes", "Registrar novedades"
-
-Cada Feature = Una capacidad real del usuario.
-
-## Desarrollo Incremental
-
-Orden recomendado:
-
-1. **F1** — Consultar residentes (fundacional)
-2. **F2** — Registrar novedades (core)
-3. **F3** — Consultar historial (lectura)
-4. **F4** — Registrar actividades (escritura)
-5. **F5** — Consultar turno (síntesis)
-6. **F6** — Situación crítica (especial)
-
-## Feature Definition of Done
-
-Una Feature está **HECHA** cuando:
-
-- [ ] Objetivo claramente definido
-- [ ] Está implementada
-- [ ] Puede ejecutarse desde mobile
-- [ ] Guarda/consulta datos correctamente
-- [ ] Respeta permisos (RBAC)
-- [ ] Manejo de errores completo
-- [ ] Fue testeada (manual + automatizado)
-- [ ] No rompe Features anteriores
-- [ ] Está documentada
-- [ ] Estado actualizado en README.md
-
-## No Sobreingeniería
-
-```
-❌ NO agregar: Chat, videollamadas, geolocalización
-❌ NO agregar: Evaluaciones complejas
-❌ NO agregar: Sincronización tiempo real
-✅ Mantener: Simple, enfocado, seguro
+**Input:**
+```json
+{
+  "residente_id": "uuid",
+  "tipo_situacion": "Violencia",  // uno de: Violencia, Crisis Emocional, Accidente, Fuga, Emergencia Sanitaria
+  "descripcion": "Peleó con otro residente"
+}
 ```
 
----
+**Output (201):**
+```json
+{
+  "id": "uuid",
+  "fecha_hora": "2026-08-31T14:30:00Z",
+  "usuario_id": "uuid"
+}
+```
 
-# 🚀 DEVELOPMENT WORKFLOW (Vibe Engineering)
-
-### Para cada Feature:
-
-1. **Lee esta AGENTS-MOBILE.md** (contexto general)
-2. **Lee AGENTS.md** (principios compartidos)
-3. **Identifica la Feature** (qué hace, para quién, por qué)
-4. **Define el flujo** (pasos, datos, validaciones)
-5. **Escribe un prompt** en `prompts/<nombre>.md`
-6. **Obtén aprobación** ("¿Implemento?")
-7. **Implementa** (código + tests + documentación)
-8. **Valida** (funciona, no rompe lo anterior)
+**Importante:** Se registra en audit_log automáticamente.
 
 ---
 
-# ⚠️ REGLAS NO NEGOCIABLES
+## [7] CHEQUEOS OBLIGATORIOS (Después de CADA implementación)
 
-1. **Seguridad > Velocidad** (siempre)
-2. **Datos sensibles = Cifrados** (AES-256)
-3. **Auditoría de todo** (user, timestamp, IP, acción)
-4. **RBAC estricto** (educador ve SOLO sus NNA)
-5. **No inventar reglas** (preguntar si hay duda)
-6. **Código claro** (otros van a leerlo)
-7. **Tests siempre** (criterios CA-01 a CA-51)
-8. **Documentar cambios** (README, tipos, prompts)
+Antes de reportar "listo", corre TODOS estos:
 
----
+```bash
+# Typecheck
+npm run typecheck           # ✓ sin errores
 
-# 📝 GIT & COMMITS
+# Linting
+npm run lint                # ✓ sin warnings
 
-### Commits Pequeños y Descriptivos
+# Compilación
+npx expo build              # ✓ sin errores
 
-✅ `feat: agregar consulta de residentes`  
-✅ `feat: registrar novedades con validación`  
-✅ `fix: corregir validación de formulario`  
-✅ `docs: actualizar README`  
+# En Expo Go:
+expo start
+  ✓ Abre la app
+  ✓ Navego entre tabs
+  ✓ Datos llegan de BD
+  ✓ Guardé algo, lo veo reflejado
 
-❌ `cambios`  
-❌ `final`  
-❌ `cosas`  
+# BD:
+SELECT COUNT(*) FROM [tabla];     # ✓ datos insertados
+SELECT * FROM audit_log WHERE tabla_nombre = '[tabla]' ORDER BY fecha_hora DESC LIMIT 5;
+                                  # ✓ auditoría registra cambios
+```
 
-### No Modificar Archivos No Relacionados
-
-Si trabajas en F1, no toques F2.
-
----
-
-# 📞 REFERENCIAS
-
-| Documento | Cuándo Leer | Contenido |
-|-----------|-----------|----------|
-| **AGENTS.md** | Siempre | Contexto general, seguridad, procesos |
-| **AGENTS-MOBILE.md** (este) | Desarrollo mobile | Features, stack, flujos mobile |
-| **03-ARGUELLO-MOBILE-FEATURES.md** | Detalle de Features | Descripción extendida |
-| **04-CRITERIOS-ACEPTACION.md** | Testing | 51 criterios verificables |
-| **05-WIREFRAMES.md** | Diseño UI | 15 wireframes especificados |
-| **06-FLUJOS-NAVEGACION.md** | Navegación | Flujos entre pantallas |
-| **BRIEF-CLAUDE-CODE.md** | Setup inicial | Cómo empezar proyecto |
+**No reportes "listo" hasta que TODO pase.**
 
 ---
 
-# ✅ CHECKLIST ANTES DE EMPEZAR
+## [8] DISEÑO + COMPONENTES
 
-- [ ] ¿Leí AGENTS.md?
-- [ ] ¿Leí esta AGENTS-MOBILE.md?
-- [ ] ¿Entiendo las 6 Features?
-- [ ] ¿Sé qué datos necesito?
-- [ ] ¿Conozco los permisos/roles?
-- [ ] ¿Sé cómo se audita?
-- [ ] ¿Identifico qué archivo/endpoint se modifica?
-- [ ] ¿Tengo un prompt claro?
-
-Si respondiste "no" a algo, detente y aclara primero.
+**Lee: `skills/design.md` para:**
+- Colores (Argüello theme: azul + púrpura)
+- Tipografía Poppins (11px a 32px)
+- Espaciado scale (4px a 48px)
+- Componentes reutilizables (PrimaryButton, ResidentCard, etc)
+- WCAG AA compliance
 
 ---
 
-# 🎓 REGLA DE ORO FINAL
+## [9] CRITERIOS DE ACEPTACIÓN
 
-> **Argüello Infancias Mobile debe ser una herramienta práctica, segura y confiable para el acompañamiento diario de NNA.**
+**Lee: `skills/testing.md` para:**
+- F1: 7 criterios de aceptación (CA-01 a CA-07)
+- F2: 10 criterios (CA-08 a CA-17)
+- F3: 7 criterios (CA-18 a CA-24)
+- F4: 8 criterios (CA-25 a CA-32)
+- F5: 8 criterios (CA-33 a CA-40)
+- F6: 11 criterios (CA-41 a CA-51)
 
-Cada Feature debe resolver una **necesidad real del educador**, no ser sobreingeniería.
+Cada Feature pasa TODOS sus criterios antes de dar por finalizado.
 
 ---
 
-**¿Siguientes pasos?**
+## [10] HISTORIAS DE USUARIO
 
-1. Elige una Feature (comienza con F1)
-2. Lee detalle en 03-ARGUELLO-MOBILE-FEATURES.md
-3. Revisa criterios en 04-CRITERIOS-ACEPTACION.md
-4. Revisa wireframes en 05-WIREFRAMES.md
-5. Escribe un prompt en `prompts/`
-6. Obtén aprobación
-7. ¡Codeá!
+**Las reglas que gobiernan el comportamiento:**
 
-**Bienvenido. Ahora eres parte de Argüello Infancias.** 🚀
+- **RBAC:** Educador solo ve residentes asignados. Coordinador ve todo.
+- **Auditoría:** Todos los cambios en novedades/criticas quedan registrados. Nunca borrar.
+- **Timestamps:** Cada novedad/crítica lleva timestamp automático (cuando la IA lo registró).
+- **Soft deletes:** Residentes/novedades nunca se borran, se marcan como deleted_at.
+- **Validación:** servidor es la fuente de verdad (no confiar en el cliente).
+- **Offline:** v1 no soporta. Siempre hay conectividad.
+- **Seguridad:** Secrets en .env del servidor. Jamás en Expo.
+
+---
+
+## RESUMEN ULTRA-CORTO (Pegalo en tu prompt diario)
+
+```
+Eres ingeniero principal. Para cada Feature:
+
+1. Lee AGENTS.md (este archivo)
+2. Lee skills/ relevantes
+3. Escribe PLAN en prompts/XX-nombre-plan.md
+4. Espera aprobación (yo digo ✓)
+5. Implementa
+6. Corre chequeos (typecheck, lint, expo start)
+7. Reporta: "Pasos exactos para probar"
+
+No saltees el PLAN. Nunca.
+```
+
+---
+
+**Fecha:** 31 de Agosto 2026  
+**Versión:** 1.0  
+**Alineado con:** Vibe Engineering + SDD
+

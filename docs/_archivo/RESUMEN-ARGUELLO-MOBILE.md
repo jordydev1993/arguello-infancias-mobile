@@ -1,3 +1,5 @@
+> ⚠️ **ARCHIVADO (2026-08-31).** Previo a la reorganización de `docs/`. Referencia actual: [`../00-INDICE.md`](../00-INDICE.md). Las rutas de archivos citadas acá ya no son válidas.
+
 # 📱 Argüello Infancias Mobile — Resumen de Documentación
 
 ## ¿Qué es Argüello Infancias Mobile?

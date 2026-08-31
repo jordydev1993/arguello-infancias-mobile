@@ -1,3 +1,5 @@
+> ⚠️ **ARCHIVADO (2026-08-31).** Índice viejo con rutas planas (`docs/03-ARGUELLO-…`). Reemplazado por [`../00-INDICE.md`](../00-INDICE.md), que refleja la estructura en subcarpetas. No usar este archivo para navegar.
+
 # 📚 ÍNDICE COMPLETO — Argüello Infancias Mobile Documentación
 
 **Todos los archivos necesarios para el proyecto Argüello Infancias Mobile están aquí.**
