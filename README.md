@@ -1,56 +1,88 @@
-# Welcome to your Expo app 👋
+# Cielo Móvil
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicación móvil para el **acompañamiento diario de NNA** en residencias bajo protección
+judicial. Es el complemento móvil del sistema web institucional "Cielo Abierto" y está pensada
+para **educadores y operadores convivenciales** durante el turno.
 
-## Get started
+> Trabajo Final / Tesis — Aplicación Móvil mediante Aprendizaje Basado en Proyectos (ABP).
 
-1. Install dependencies
+## Estado actual: scaffold + F1
 
-   ```bash
-   npm install
-   ```
+Este repositorio contiene el **andamiaje del MVP** con la **Feature F1 (consultar residentes)**
+navegable sobre **datos mock**. Las Features F2–F6 tienen su lugar en la estructura (tipos,
+schemas, navegación) pero todavía no están implementadas.
 
-2. Start the app
+| Feature | Estado |
+|---|---|
+| F1 — Consultar residentes | ✅ navegable (mock) |
+| F2 — Registrar novedades | ⬜ pendiente (tipos + Zod listos) |
+| F3 — Consultar historial | ⬜ pendiente (vista de sólo lectura ya visible) |
+| F4 — Registrar actividades | ⬜ pendiente (tipos + Zod listos) |
+| F5 — Consultar turno | 🟡 vista de resumen con mock |
+| F6 — Situación crítica | 🟡 pantalla de advertencia (WF-13); formulario pendiente |
 
-   ```bash
-   npx expo start
-   ```
+## Stack
 
-In the output, you'll find options to open the app in a
+- **Expo SDK 54** + React Native 0.81 + TypeScript (strict)
+- **Expo Router** (file-based, typed routes)
+- **NativeWind v4** (Tailwind CSS) + tipografía **Poppins**
+- **Zustand** (estado global) + **React Query** (data fetching)
+- **AsyncStorage** (cache) / **expo-secure-store** (tokens, a futuro)
+- **Zod** (validación)
+- **Supabase** (`@supabase/supabase-js`) — configurado pero aún **sin usar** (mock data)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Cómo correr
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Abrí la app en **Expo Go (SDK 54)** escaneando el QR, o presioná `w` (web) / `a` (Android) / `i` (iOS).
 
-### Other setup steps
+### Credenciales de demostración
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```
+usuario@test.com
+password123
+```
 
-## Learn more
+### Verificaciones
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npx tsc --noEmit     # tipos
+npx expo lint        # lint
+npx expo-doctor      # salud del proyecto
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Estructura
 
-## Join the community
+```
+src/
+  app/                 # rutas (Expo Router)
+    (auth)/login.tsx   # WF-01
+    (tabs)/            # Inicio · Residentes · Mi turno · Crítica · Perfil
+    residentes/[id]    # WF-04 detalle del residente
+  components/          # UI reutilizable (botones, cards, estados)
+  hooks/               # useResidents, useObservations, useActivities, useShiftInfo, useAuth
+  lib/                 # validation (Zod), storage, supabase (stub), query-client
+  store/               # Zustand: auth, resident, ui
+  types/               # modelos de las 6 Features
+  data/                # datos mock (residentes, novedades, actividades, turno, usuarios)
+  utils/               # constants (enums), formatters (fechas, edad)
+design-tokens.json     # paleta + tipografía (consumido por tailwind.config.js)
+docs/                  # documentación prescriptiva (features, criterios, wireframes, flujos)
+```
 
-Join our community of developers creating universal apps.
+## Conectar Supabase (paso siguiente)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. `cp .env.example .env` y completá `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
+2. En cada `src/hooks/use*.ts`, reemplazá el `queryFn` mock por la llamada real
+   (`getSupabase().from(...)` o el endpoint del backend).
+3. En `src/store/authStore.ts`, cambiá `login` por `auth.signInWithPassword`.
+
+## Documentación
+
+Ver `docs/`: `03-...FEATURES.md` (6 Features), `04-...CRITERIOS-ACEPTACION.md` (51 CA),
+`05-...WIREFRAMES.md` (15 WF), `06-...FLUJOS-NAVEGACION.md`, `DESIGN-SYSTEM-CIELO-MOBILE.md`.
+Metodología de desarrollo en `AGENTS.md`.
