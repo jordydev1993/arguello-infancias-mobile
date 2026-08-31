@@ -86,3 +86,9 @@ docs/                  # documentación prescriptiva (features, criterios, wiref
 Ver `docs/`: `03-...FEATURES.md` (6 Features), `04-...CRITERIOS-ACEPTACION.md` (51 CA),
 `05-...WIREFRAMES.md` (15 WF), `06-...FLUJOS-NAVEGACION.md`, `DESIGN-SYSTEM-ARGUELLO-MOBILE.md`.
 Metodología de desarrollo en `AGENTS.md`.
+
+## Compartir con el equipo
+
+EAS Update + build de preview configurados. Ver `docs/EAS-COMPARTIR.md`:
+Android por link (APK), iPhone por Expo Go, y `npm run update:preview "<msg>"` para
+publicar cambios sin recompilar.
