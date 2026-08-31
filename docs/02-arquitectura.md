@@ -1,8 +1,8 @@
-# Arquitectura — Arguello Móvil
+# Arquitectura — Argüello Infancias Mobile
 
 ## 1. Objetivo
 
-Definir la arquitectura técnica de la aplicación móvil Arguello Móvil y su relación con los servicios y datos del sistema de gestión de residencias.
+Definir la arquitectura técnica de la aplicación móvil Argüello Infancias Mobile y su relación con los servicios y datos del sistema de gestión de residencias.
 
 ## 2. Arquitectura general
 
@@ -162,7 +162,7 @@ La aplicación deberá contemplar:
 
 ## 9. Integración con el sistema existente
 
-Arguello Móvil se plantea como complemento del sistema web de gestión de residencias.
+Argüello Infancias Mobile se plantea como complemento del sistema web de gestión de residencias.
 
 Conceptualmente:
 

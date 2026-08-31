@@ -1,19 +1,19 @@
 {
   "expo": {
-    "name": "Cielo Móvil",
-    "slug": "cielo-movil",
+    "name": "Argüello Infancias",
+    "slug": "arguello-infancias-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "cielomovil",
+    "scheme": "arguelloinfanciasmobile",
     "userInterfaceStyle": "light",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.cielo.mobile",
+      "bundleIdentifier": "com.arguello.infancias.mobile",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.cielo.mobile",
+      "package": "com.arguello.infancias.mobile",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

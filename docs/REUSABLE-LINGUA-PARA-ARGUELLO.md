@@ -1,9 +1,9 @@
-# 🔄 REUTILIZABLE DE LINGUA → CIELO MÓVIL
+# 🔄 REUTILIZABLE DE LINGUA → ARGÜELLO INFANCIAS MOBILE
 
-## Análisis de Proyecto Lingua vs Cielo Móvil
+## Análisis de Proyecto Lingua vs Argüello Infancias Mobile
 
 **Lingua** es una app de aprendizaje de idiomas con AI (Duolingo-inspired)  
-**Cielo Móvil** es una app de acompañamiento de NNA en residencias
+**Argüello Infancias Mobile** es una app de acompañamiento de NNA en residencias
 
 Aunque tienen propósitos diferentes, **comparten arquitectura técnica y patrones de diseño** que se pueden reutilizar.
 
@@ -26,7 +26,7 @@ Aunque tienen propósitos diferentes, **comparten arquitectura técnica y patron
 ### Authentication
 ```
 Lingua: Clerk
-Cielo: Supabase Auth (similar pero diferente)
+Argüello Infancias: Supabase Auth (similar pero diferente)
 
 → Patrón: Ambas usan (auth)/ folder + protected routes
 → REUTILIZABLE: Estructura de rutas autenticadas
@@ -35,7 +35,7 @@ Cielo: Supabase Auth (similar pero diferente)
 ### Backend Integration
 ```
 Lingua: Stream SDK + GetStream + Vision Agents
-Cielo: Supabase + Express API
+Argüello Infancias: Supabase + Express API
 
 → REUTILIZABLE: Patrón de API calls + error handling + loading states
 ```
@@ -70,7 +70,7 @@ types/
 assets/
 ```
 
-**Cielo Móvil adaptará así:**
+**Argüello Infancias Mobile adaptará así:**
 
 ```
 app/
@@ -112,7 +112,7 @@ assets/            ← icons, illustrations, fonts
 **Lingua usa: Poppins**
 ```
 Poppins es moderna, geométrica, friendly
-→ REUTILIZAR para Cielo Móvil
+→ REUTILIZAR para Argüello Infancias Mobile
 ```
 
 **Jerarquía de Lingua:**
@@ -127,7 +127,7 @@ Body Small: 13px Regular (Supporting text)
 Caption: 11px Regular (Labels, meta text)
 ```
 
-✅ **REUTILIZAR ESTE ESQUEMA EXACTO** para Cielo Móvil
+✅ **REUTILIZAR ESTE ESQUEMA EXACTO** para Argüello Infancias Mobile
 
 ---
 
@@ -141,7 +141,7 @@ Lingua Blue: #4D8BFF
 Lingua Green: #21C16B
 ```
 
-**Cielo Móvil - Propuesta (sin paleta Figma aún):**
+**Argüello Infancias Mobile - Propuesta (sin paleta Figma aún):**
 ```
 Primario: Azul educativo (#007AFF) - más académico
 Secundario: Púrpura suave (#7C3AED) - reconfortante
@@ -170,7 +170,7 @@ Neutral: Gris (#6B7280) - soporte
 | LoadingState | Data loading | ✅ Sí |
 | EmptyState | No data | ✅ Sí |
 
-#### Para Cielo Móvil (Adaptation)
+#### Para Argüello Infancias Mobile (Adaptation)
 
 ```
 ✅ PrimaryButton
@@ -217,19 +217,19 @@ Neutral: Gris (#6B7280) - soporte
 10-home-ui.md             → Pantalla de inicio
 11-lesson-ui.md           → Pantalla de lecciones
 12-audio-lesson-ui.md     → Audio interactions
-13-stream-integration.md   → Video/streaming (NO para Cielo)
-14-vision-agents.md       → AI vision (NO para Cielo)
+13-stream-integration.md   → Video/streaming (NO para Argüello Infancias)
+14-vision-agents.md       → AI vision (NO para Argüello Infancias)
 15-connection-to-ui.md    → Conexión backend
-16-ai-teacher-improvements.md → Mejoras AI (NO para Cielo)
-17-live-captions.md       → Captions (NO para Cielo)
+16-ai-teacher-improvements.md → Mejoras AI (NO para Argüello Infancias)
+17-live-captions.md       → Captions (NO para Argüello Infancias)
 18-more-posthog.md        → Analytics (opcional)
 ```
 
-**Para Cielo Móvil - Reutilizable:**
+**Para Argüello Infancias Mobile - Reutilizable:**
 
 ```
 ✅ 01-nativewind.md          → Setup NativeWind (copiar exacto)
-✅ 02-design-theme.md        → Adaptar colores/fonts (Cielo theme)
+✅ 02-design-theme.md        → Adaptar colores/fonts (Argüello Infancias theme)
 ✅ 03-onboarding-ui.md       → Adaptar flujo de bienvenida
 ✅ 04-authentication-ui.md   → Adaptar login/signup + MFA
 ✅ 05-select-language.md     → → Selector de residentes (adaptar)
@@ -283,7 +283,7 @@ TYPOGRAPHY
 └─ Line height: 1.2 to 1.6
 ```
 
-### Para Cielo Móvil:
+### Para Argüello Infancias Mobile:
 
 **Adoptar:**
 ✅ Tipografía Poppins (igual)  
@@ -307,7 +307,7 @@ TYPOGRAPHY
 - Bottom action buttons (Camera, Mic, Subtitles, End Call)
 - Bottom score feedback (Speaking, Pronunciation, Grammar)
 
-→ **Para Cielo:** Video call con AI Tutor (similar estructura)
+→ **Para Argüello Infancias:** Video call con AI Tutor (similar estructura)
 
 ---
 
@@ -316,7 +316,7 @@ TYPOGRAPHY
 - Tabs: Lessons / Practice
 - Lesson list con status indicators (✓ completed, 🔄 in progress, 🔒 locked)
 
-→ **Para Cielo:** Listado de residentes / tareas (adaptable)
+→ **Para Argüello Infancias:** Listado de residentes / tareas (adaptable)
 
 ---
 
@@ -327,7 +327,7 @@ TYPOGRAPHY
 - "Today's plan" list
 - Bottom navigation tabs
 
-→ **Para Cielo:** Inicio con turno + novedades + tareas (usar patrón)
+→ **Para Argüello Infancias:** Inicio con turno + novedades + tareas (usar patrón)
 
 ---
 
@@ -337,7 +337,7 @@ TYPOGRAPHY
 - Flag icons + learner count
 - Bottom illustration
 
-→ **Para Cielo:** Selector de residentes o filtros
+→ **Para Argüello Infancias:** Selector de residentes o filtros
 
 ---
 
@@ -346,7 +346,7 @@ TYPOGRAPHY
 - Email + Password fields
 - Social login (Google, Facebook, Apple)
 
-→ **Para Cielo:** Auth + MFA (adaptar formulario)
+→ **Para Argüello Infancias:** Auth + MFA (adaptar formulario)
 
 ---
 
@@ -356,7 +356,7 @@ TYPOGRAPHY
 - Carousel dots
 - CTA button
 
-→ **Para Cielo:** Onboarding de educador (reutilizar estructura)
+→ **Para Argüello Infancias:** Onboarding de educador (reutilizar estructura)
 
 ---
 
@@ -370,7 +370,7 @@ nativewind: ^2.x
 tailwindcss: ^3.x
 ```
 
-→ **COPIAR EXACTO para Cielo Móvil** (misma versión)
+→ **COPIAR EXACTO para Argüello Infancias Mobile** (misma versión)
 
 ---
 
@@ -400,7 +400,7 @@ export const useAuthStore = create((set) => ({
 - useLesson (lesson data)
 - useLessonProgress (progress tracking)
 
-→ **Para Cielo:**
+→ **Para Argüello Infancias:**
 ```typescript
 - useAuth (educador auth)
 - useResidents (residentes asignados)
@@ -413,7 +413,7 @@ export const useAuthStore = create((set) => ({
 
 ## 📊 TABLA COMPARATIVA REUTILIZABLE
 
-| Aspecto | Lingua | Cielo Móvil | Reutilizable |
+| Aspecto | Lingua | Argüello Infancias Mobile | Reutilizable |
 |---------|--------|-----------|-------------|
 | Stack | Expo + RN + TS | Expo + RN + TS | ✅ 100% |
 | Routing | Expo Router | Expo Router | ✅ 100% |
@@ -436,7 +436,7 @@ export const useAuthStore = create((set) => ({
 ```
 Lingua: colors, typography, spacing
 ↓
-Cielo: adaptar mismo patrón en constants/
+Argüello Infancias: adaptar mismo patrón en constants/
 ```
 
 ### 2. **Component Base** (copiar código, adaptar estilos)
@@ -469,9 +469,9 @@ app/(tabs)/_layout.tsx → cambiar tabs
 ## 🚫 QUÉ NO REUTILIZAR
 
 ```
-❌ Clerk authentication (Supabase en Cielo)
-❌ Stream SDK (Supabase en Cielo)
-❌ GetStream (Supabase en Cielo)
+❌ Clerk authentication (Supabase en Argüello Infancias)
+❌ Stream SDK (Supabase en Argüello Infancias)
+❌ GetStream (Supabase en Argüello Infancias)
 ❌ Vision Agents (No hay AI teacher)
 ❌ Lesson/Course system (Diferentes features)
 ❌ Audio lesson UI (No es el foco)
@@ -515,7 +515,7 @@ Ahorro: ~40% (80 horas)
 Mencionaste: "las imágenes, iconos y fonts 
 las tengo en una carpeta aparte"
 
-→ Copia a: cielo-mobile/assets/
+→ Copia a: arguello-infancias-mobile/assets/
    ├── images/
    ├── icons/
    └── fonts/
@@ -543,20 +543,20 @@ las tengo en una carpeta aparte"
 2. Reemplazar Stream SDK con Supabase API
 3. Cambiar LanguageCard → ResidentCard
 4. Cambiar LessonCard → ActivityCard
-5. Adaptar tab navigation a 5 tabs Cielo
+5. Adaptar tab navigation a 5 tabs Argüello Infancias
 ```
 
 ### Fase 3: Features (Nuevo)
 ```
 1. Implementar 6 Features (F1-F6)
-2. Crear hooks específicos para Cielo
+2. Crear hooks específicos para Argüello Infancias
 3. Crear screens específicas
 4. Testing
 ```
 
 ---
 
-**¡Con Lingua como base, Cielo Móvil MVP estará listo en 50% menos tiempo!** 🚀
+**¡Con Lingua como base, Argüello Infancias Mobile MVP estará listo en 50% menos tiempo!** 🚀
 
 EOFLIGA
-cat /mnt/user-data/outputs/REUSABLE-LINGUA-PARA-CIELO.md | head -150
+cat /mnt/user-data/outputs/REUSABLE-LINGUA-PARA-ARGUELLO.md | head -150

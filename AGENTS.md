@@ -1,4 +1,4 @@
-# AGENTS-MOBILE.md — Cielo Móvil (Unificado)
+# AGENTS-MOBILE.md — Argüello Infancias Mobile (Unificado)
 
 **Aplicación móvil para el acompañamiento diario de NNA en residencias bajo protección judicial.**
 
@@ -8,7 +8,7 @@
 
 ## 📌 PROYECTO GENERAL
 
-**Cielo Móvil** es parte del **Sistema de Gestión para Residencia de NNA "Cielo Abierto"**, desarrollado como Trabajo Final/Tesis en el marco de **Aplicación Móvil mediante Aprendizaje Basado en Proyectos (ABP)**.
+**Argüello Infancias Mobile** es parte del **Sistema de Gestión para Residencia de NNA "Argüello Infancias"**, desarrollado como Trabajo Final/Tesis en el marco de **Aplicación Móvil mediante Aprendizaje Basado en Proyectos (ABP)**.
 
 La aplicación móvil es **complemento** del sistema web institucional, NO reemplaza.
 
@@ -33,14 +33,14 @@ La aplicación debe permitir que educadores y operadores convivenciales:
 
 ## 📱 PROPÓSITO MÓVIL vs WEB
 
-### Cielo Web (Sistema Principal)
+### Argüello Infancias Web (Sistema Principal)
 
 ```
 Usuarios: Dirección, Técnicos, Psicología, Trabajo Social, Admin
 Responsabilidades: Gestión completa, legajos, informes, auditoría, decisiones institucionales
 ```
 
-### Cielo Móvil (Complemento)
+### Argüello Infancias Mobile (Complemento)
 
 ```
 Usuarios: Educadores, Operadores convivenciales
@@ -54,7 +54,7 @@ Responsabilidades: Acompañamiento diario, registro de actividades, novedades, t
                          │
               ┌──────────┴──────────┐
               │                     │
-         SISTEMA WEB           CIELO MÓVIL
+         SISTEMA WEB           ARGÜELLO INFANCIAS MOBILE
               │                     │
        Gestión institucional    Trabajo diario
               │                     │
@@ -381,7 +381,7 @@ Inicio → Situación Crítica → Advertencia → Formulario → Confirmar
 # 🏗️ ESTRUCTURA DEL PROYECTO
 
 ```
-cielo-mobile/
+arguello-infancias-mobile/
 ├── app/
 │   ├── (auth)/
 │   │   ├── login.tsx
@@ -706,7 +706,7 @@ Si trabajas en F1, no toques F2.
 |-----------|-----------|----------|
 | **AGENTS.md** | Siempre | Contexto general, seguridad, procesos |
 | **AGENTS-MOBILE.md** (este) | Desarrollo mobile | Features, stack, flujos mobile |
-| **03-CIELO-MOBILE-FEATURES.md** | Detalle de Features | Descripción extendida |
+| **03-ARGUELLO-MOBILE-FEATURES.md** | Detalle de Features | Descripción extendida |
 | **04-CRITERIOS-ACEPTACION.md** | Testing | 51 criterios verificables |
 | **05-WIREFRAMES.md** | Diseño UI | 15 wireframes especificados |
 | **06-FLUJOS-NAVEGACION.md** | Navegación | Flujos entre pantallas |
@@ -731,7 +731,7 @@ Si respondiste "no" a algo, detente y aclara primero.
 
 # 🎓 REGLA DE ORO FINAL
 
-> **Cielo Móvil debe ser una herramienta práctica, segura y confiable para el acompañamiento diario de NNA.**
+> **Argüello Infancias Mobile debe ser una herramienta práctica, segura y confiable para el acompañamiento diario de NNA.**
 
 Cada Feature debe resolver una **necesidad real del educador**, no ser sobreingeniería.
 
@@ -740,11 +740,11 @@ Cada Feature debe resolver una **necesidad real del educador**, no ser sobreinge
 **¿Siguientes pasos?**
 
 1. Elige una Feature (comienza con F1)
-2. Lee detalle en 03-CIELO-MOBILE-FEATURES.md
+2. Lee detalle en 03-ARGUELLO-MOBILE-FEATURES.md
 3. Revisa criterios en 04-CRITERIOS-ACEPTACION.md
 4. Revisa wireframes en 05-WIREFRAMES.md
 5. Escribe un prompt en `prompts/`
 6. Obtén aprobación
 7. ¡Codeá!
 
-**Bienvenido. Ahora eres parte de Cielo Abierto.** 🚀
+**Bienvenido. Ahora eres parte de Argüello Infancias.** 🚀

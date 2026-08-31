@@ -1,4 +1,4 @@
-# Criterios de Aceptación — Cielo Móvil
+# Criterios de Aceptación — Argüello Infancias Mobile
 
 ## Objetivo
 

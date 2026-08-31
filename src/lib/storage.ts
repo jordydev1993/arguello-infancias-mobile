@@ -71,6 +71,6 @@ export const secure = {
 };
 
 export const STORAGE_KEYS = {
-  authSession: 'cielo.auth.session',
-  uiTheme: 'cielo.ui.theme',
+  authSession: 'arguello.auth.session',
+  uiTheme: 'arguello.ui.theme',
 } as const;

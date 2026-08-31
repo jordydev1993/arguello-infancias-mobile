@@ -1,6 +1,6 @@
-# 🎨 DESIGN SYSTEM — Cielo Móvil
+# 🎨 DESIGN SYSTEM — Argüello Infancias Mobile
 
-**Basado en Lingua Design System, adaptado para Cielo Móvil**
+**Basado en Lingua Design System, adaptado para Argüello Infancias Mobile**
 
 ---
 
@@ -67,19 +67,19 @@ Caption (Meta text)
 ### Primary Colors (Educación + Protección)
 
 ```
-CIELO BLUE (Primario principal)
+ARGÜELLO BLUE (Primario principal)
 ├─ Color: #007AFF
 ├─ RGB: 0, 122, 255
 ├─ Use: CTA buttons, links, highlights
 └─ Message: Confianza, profesionalismo
 
-CIELO PURPLE (Secundario, reconfortante)
+ARGÜELLO PURPLE (Secundario, reconfortante)
 ├─ Color: #7C3AED
 ├─ RGB: 124, 58, 237
 ├─ Use: Alternative CTAs, accents
 └─ Message: Calidez, protección
 
-CIELO TEAL (Terciario, calmante)
+ARGÜELLO TEAL (Terciario, calmante)
 ├─ Color: #14B8A6
 ├─ RGB: 20, 184, 166
 ├─ Use: Secondary accents
@@ -163,7 +163,7 @@ BACKGROUND (Page background)
 #### PrimaryButton
 ```
 State: Default
-├─ Background: #007AFF (CIELO BLUE)
+├─ Background: #007AFF (ARGÜELLO BLUE)
 ├─ Text: white, 16px SemiBold
 ├─ Padding: 12px 24px
 ├─ Border Radius: 12px
@@ -548,7 +548,7 @@ Small (481px - 768px): Constrained width
 Medium (769px+): Tablet/larger
 ```
 
-**Nota:** Cielo Móvil es mobile-first, pero compatible con tablets.
+**Nota:** Argüello Infancias Mobile es mobile-first, pero compatible con tablets.
 
 ---
 
@@ -567,7 +567,7 @@ Style: Outline (not filled)
 Weight: 2px line weight
 ```
 
-**Íconos Cielo Móvil:**
+**Íconos Argüello Infancias Mobile:**
 ```
 Bottom Nav Icons:
 ├─ Home: 🏠
@@ -604,7 +604,7 @@ Status Icons:
 
 ## 12. TAILWIND CSS UTILITIES
 
-**Para Cielo Móvil (usando NativeWind):**
+**Para Argüello Infancias Mobile (usando NativeWind):**
 
 ```
 Colors:
@@ -677,4 +677,4 @@ Rounded:
 
 ---
 
-**Design System completo para Cielo Móvil MVP.** ✅
+**Design System completo para Argüello Infancias Mobile MVP.** ✅

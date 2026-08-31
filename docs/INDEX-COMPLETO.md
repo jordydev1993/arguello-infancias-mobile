@@ -1,6 +1,6 @@
-# 📚 ÍNDICE COMPLETO — Cielo Móvil Documentación
+# 📚 ÍNDICE COMPLETO — Argüello Infancias Mobile Documentación
 
-**Todos los archivos necesarios para el proyecto Cielo Móvil están aquí.**
+**Todos los archivos necesarios para el proyecto Argüello Infancias Mobile están aquí.**
 
 ---
 
@@ -10,7 +10,7 @@
 
 #### `BRIEF-CLAUDE-CODE.md` 🔴 **COMIENZA AQUÍ**
 - Resumen ejecutivo del proyecto
-- Qué es Cielo Móvil (objetivo, scope, usuarios)
+- Qué es Argüello Infancias Mobile (objetivo, scope, usuarios)
 - Stack técnico (Expo + React Native + TypeScript + Supabase)
 - Estructura inicial del proyecto (6 pasos)
 - Entregables esperados
@@ -64,7 +64,7 @@
 
 ### TIER 3: ESPECIFICACIONES POR ASPECTO
 
-#### `03-CIELO-MOBILE-FEATURES.md`
+#### `03-ARGUELLO-MOBILE-FEATURES.md`
 - 6 Features con descripción extendida
 - Objetivo + flujo + datos + validaciones de cada Feature
 - Resumen de Features (tabla)
@@ -74,7 +74,7 @@
 - **👉 Tiempo de lectura: 25 min**
 - **👉 Mejor para: Feature clarity, Development**
 
-#### `04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md`
+#### `04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md`
 - **51 criterios de aceptación** (DADO-CUANDO-ENTONCES)
 - 7 criterios F1
 - 10 criterios F2
@@ -87,7 +87,7 @@
 - **👉 Tiempo de lectura: 30 min**
 - **👉 Mejor para: QA, Testing, Verification**
 
-#### `05-CIELO-MOBILE-WIREFRAMES.md`
+#### `05-ARGUELLO-MOBILE-WIREFRAMES.md`
 - **15 wireframes especificados** (WF-01 a WF-15)
 - Descripción de cada wireframe
 - Elementos, comportamiento, interacción
@@ -98,7 +98,7 @@
 - **👉 Tiempo de lectura: 30 min**
 - **👉 Mejor para: Design, UI/UX, Frontend**
 
-#### `06-CIELO-MOBILE-FLUJOS-NAVEGACION.md`
+#### `06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md`
 - Flujo general de la app
 - Flujos por Feature (F1-F6)
 - Flujos de error
@@ -113,7 +113,7 @@
 
 ### TIER 4: SÍNTESIS Y RECURSOS
 
-#### `RESUMEN-CIELO-MOBILE.md`
+#### `RESUMEN-ARGUELLO-MOBILE.md`
 - Resumen ejecutivo
 - Documentación completa (6 archivos)
 - Estadísticas (6 Features, 51 criterios, 15 wireframes)
@@ -146,9 +146,9 @@
 ```
 1. BRIEF-CLAUDE-CODE.md (overview)
 2. 01-documento-alcance.md (scope)
-3. RESUMEN-CIELO-MOBILE.md (metrics)
-4. 03-CIELO-MOBILE-FEATURES.md (features)
-5. 04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md (acceptance)
+3. RESUMEN-ARGUELLO-MOBILE.md (metrics)
+4. 03-ARGUELLO-MOBILE-FEATURES.md (features)
+5. 04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md (acceptance)
 ```
 **⏱️ Total: ~90 min**
 
@@ -156,27 +156,27 @@
 ```
 1. BRIEF-CLAUDE-CODE.md (setup)
 2. AGENTS-MOBILE-UNIFICADO-FINAL.md (guía completa)
-3. 03-CIELO-MOBILE-FEATURES.md (features)
-4. 04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md (criteria)
-5. 06-CIELO-MOBILE-FLUJOS-NAVEGACION.md (navigation)
+3. 03-ARGUELLO-MOBILE-FEATURES.md (features)
+4. 04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md (criteria)
+5. 06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md (navigation)
 ```
 **⏱️ Total: ~2 horas**
 
 ### 🎨 Designer / UI
 ```
 1. BRIEF-CLAUDE-CODE.md (overview)
-2. 05-CIELO-MOBILE-WIREFRAMES.md (wireframes)
-3. 06-CIELO-MOBILE-FLUJOS-NAVEGACION.md (flows)
-4. 03-CIELO-MOBILE-FEATURES.md (features context)
+2. 05-ARGUELLO-MOBILE-WIREFRAMES.md (wireframes)
+3. 06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md (flows)
+4. 03-ARGUELLO-MOBILE-FEATURES.md (features context)
 ```
 **⏱️ Total: ~80 min**
 
 ### 🧪 QA / Testing
 ```
 1. BRIEF-CLAUDE-CODE.md (overview)
-2. 04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md (criteria)
-3. 05-CIELO-MOBILE-WIREFRAMES.md (wireframes reference)
-4. 06-CIELO-MOBILE-FLUJOS-NAVEGACION.md (flows)
+2. 04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md (criteria)
+3. 05-ARGUELLO-MOBILE-WIREFRAMES.md (wireframes reference)
+4. 06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md (flows)
 ```
 **⏱️ Total: ~75 min**
 
@@ -192,7 +192,7 @@
 ### 🆕 Nuevo en Proyecto
 ```
 1. BRIEF-CLAUDE-CODE.md (start here!)
-2. RESUMEN-CIELO-MOBILE.md (metrics)
+2. RESUMEN-ARGUELLO-MOBILE.md (metrics)
 3. AGENTS-MOBILE-UNIFICADO-FINAL.md (deep dive)
 4. El resto: según tu rol
 ```
@@ -286,10 +286,10 @@ El único paso que falta es obtener la **paleta de colores de Figma**.
 Cada Feature sigue este flujo:
 
 ```
-1. Lee Feature en 03-CIELO-MOBILE-FEATURES.md
-2. Lee wireframes en 05-CIELO-MOBILE-WIREFRAMES.md
-3. Lee flujos en 06-CIELO-MOBILE-FLUJOS-NAVEGACION.md
-4. Lee criterios en 04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md
+1. Lee Feature en 03-ARGUELLO-MOBILE-FEATURES.md
+2. Lee wireframes en 05-ARGUELLO-MOBILE-WIREFRAMES.md
+3. Lee flujos en 06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md
+4. Lee criterios en 04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md
 5. Implementa Feature
 6. Verifica todos los criterios
 ```
@@ -342,7 +342,7 @@ Responde todas preguntas sobre
 
 **Envía a Claude Code:**
 ```
-"Tengo documentación completa de Cielo Móvil.
+"Tengo documentación completa de Argüello Infancias Mobile.
 Comienza con el BRIEF-CLAUDE-CODE.md.
 Todos los archivos .md están adjuntos.
 ¿Generas el proyecto Expo?"
@@ -353,17 +353,17 @@ Todos los archivos .md están adjuntos.
 ## 📊 DOCUMENTO TREE
 
 ```
-Cielo-Móvil/
+arguello-infancias-mobile/docs/
 ├── 01-documento-alcance.md
 ├── 02-arquitectura.md
-├── 03-CIELO-MOBILE-FEATURES.md
-├── 04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md
-├── 05-CIELO-MOBILE-WIREFRAMES.md
-├── 06-CIELO-MOBILE-FLUJOS-NAVEGACION.md
+├── 03-ARGUELLO-MOBILE-FEATURES.md
+├── 04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md
+├── 05-ARGUELLO-MOBILE-WIREFRAMES.md
+├── 06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md
 ├── AGENTS-MOBILE-UNIFICADO-FINAL.md ← CENTRAL
 ├── UNIFICACION-AGENTS-MOBILE.md
 ├── BRIEF-CLAUDE-CODE.md ← START
-├── RESUMEN-CIELO-MOBILE.md
+├── RESUMEN-ARGUELLO-MOBILE.md
 ├── RESUMEN-FINAL-SESION.md
 ├── INDEX-COMPLETO.md ← TÚ ESTÁS AQUÍ
 └── [FALTA] PALETA-COLORES.md ← OBTENER DE FIGMA

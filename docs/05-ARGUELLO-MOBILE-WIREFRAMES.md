@@ -1,14 +1,14 @@
-# Wireframes — Cielo Móvil
+# Wireframes — Argüello Infancias Mobile
 
 ## Objetivo
 
-Definir las pantallas necesarias para representar visualmente las seis Features de Cielo Móvil.
+Definir las pantallas necesarias para representar visualmente las seis Features de Argüello Infancias Mobile.
 
 Los wireframes son elementos de **soporte y diseño**. **No representan Features adicionales.**
 
 Se recomienda construirlos en **Figma** bajo el nombre:
 
-**Cielo Móvil — Acompañamiento Diario**
+**Argüello Infancias Mobile — Acompañamiento Diario**
 
 ---
 
@@ -46,7 +46,7 @@ Se recomienda construirlos en **Figma** bajo el nombre:
 
 **Elementos:**
 
-- [ ] Logo/identidad de Cielo Móvil (header)
+- [ ] Logo/identidad de Argüello Infancias Mobile (header)
 - [ ] Título "Iniciar sesión" o similar
 - [ ] Campo de usuario/correo (con placeholder)
 - [ ] Campo de contraseña (con toggle mostrar/ocultar)
@@ -618,7 +618,7 @@ Cada wireframe debe:
 
 # 7. Próximos Pasos
 
-1. Crear archivo en Figma con nombre: **"Cielo Móvil — Acompañamiento Diario"**
+1. Crear archivo en Figma con nombre: **"Argüello Infancias Mobile — Acompañamiento Diario"**
 2. Crear 15 frames (uno por wireframe)
 3. Seguir estructura y elementos descritos arriba
 4. Aplicar guía de diseño visual

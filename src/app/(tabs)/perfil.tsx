@@ -38,9 +38,9 @@ export default function PerfilScreen() {
         <Text className="font-bold text-h1 text-ink">Perfil</Text>
 
         <View className="items-center gap-2">
-          <View className="h-20 w-20 items-center justify-center rounded-full bg-cielo-blue/10">
-            <Text className="font-semibold text-h2 text-cielo-blue">
-              {iniciales(first || 'C', last || 'M')}
+          <View className="h-20 w-20 items-center justify-center rounded-full bg-arguello-blue/10">
+            <Text className="font-semibold text-h2 text-arguello-blue">
+              {iniciales(first || 'A', last || 'I')}
             </Text>
           </View>
           <Text className="font-semibold text-h3 text-ink">{user?.full_name}</Text>

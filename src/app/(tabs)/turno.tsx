@@ -50,7 +50,7 @@ export default function TurnoScreen() {
             <Text className="font-semibold text-h4 text-ink">
               {formatHora(shift.starts_at)} – {formatHora(shift.ends_at)}
             </Text>
-            <Text className="font-semibold text-caption text-cielo-blue">
+            <Text className="font-semibold text-caption text-arguello-blue">
               {SHIFT_STATUS_LABEL[shift.status]}
             </Text>
           </View>

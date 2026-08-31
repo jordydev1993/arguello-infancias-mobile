@@ -54,8 +54,8 @@ export default function ResidentDetailScreen() {
       <ScreenHeader title={nombre} subtitle={edadLabel(resident.birthdate)} />
 
       <View className="flex-row items-center gap-3 px-5 pb-3">
-        <View className="h-14 w-14 items-center justify-center rounded-full bg-cielo-blue/10">
-          <Text className="font-semibold text-h4 text-cielo-blue">
+        <View className="h-14 w-14 items-center justify-center rounded-full bg-arguello-blue/10">
+          <Text className="font-semibold text-h4 text-arguello-blue">
             {iniciales(resident.first_name, resident.last_name)}
           </Text>
         </View>
@@ -69,9 +69,9 @@ export default function ResidentDetailScreen() {
             accessibilityRole="tab"
             accessibilityState={{ selected: tab === t }}
             onPress={() => setTab(t)}
-            className={`border-b-2 px-2 pb-2 ${tab === t ? 'border-cielo-blue' : 'border-transparent'}`}>
+            className={`border-b-2 px-2 pb-2 ${tab === t ? 'border-arguello-blue' : 'border-transparent'}`}>
             <Text
-              className={`text-body-sm ${tab === t ? 'font-semibold text-cielo-blue' : 'text-ink-secondary'}`}>
+              className={`text-body-sm ${tab === t ? 'font-semibold text-arguello-blue' : 'text-ink-secondary'}`}>
               {t}
             </Text>
           </Pressable>
@@ -138,7 +138,7 @@ function NovedadesTab({ minorId }: { minorId: string }) {
       ) : (
         items.map((o) => (
           <View key={o.id} className="gap-1 rounded-md border border-line bg-canvas p-3">
-            <Text className="font-semibold text-body-sm text-cielo-blue">
+            <Text className="font-semibold text-body-sm text-arguello-blue">
               {OBSERVATION_CATEGORY_LABELS[o.category]}
             </Text>
             <Text className="text-body-md text-ink">{o.content}</Text>

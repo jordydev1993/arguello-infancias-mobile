@@ -22,8 +22,8 @@ export function ResidentCard({ resident, onPress }: ResidentCardProps) {
       {resident.photo_url ? (
         <Image source={{ uri: resident.photo_url }} style={{ width: 48, height: 48, borderRadius: 24 }} />
       ) : (
-        <View className="h-12 w-12 items-center justify-center rounded-full bg-cielo-blue/10">
-          <Text className="font-semibold text-body-md text-cielo-blue">
+        <View className="h-12 w-12 items-center justify-center rounded-full bg-arguello-blue/10">
+          <Text className="font-semibold text-body-md text-arguello-blue">
             {iniciales(resident.first_name, resident.last_name)}
           </Text>
         </View>

@@ -9,12 +9,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cielo: {
-          DEFAULT: c.cielo.blue,
-          blue: c.cielo.blue,
-          'blue-pressed': c.cielo.bluePressed,
-          purple: c.cielo.purple,
-          teal: c.cielo.teal,
+        arguello: {
+          DEFAULT: c.arguello.blue,
+          blue: c.arguello.blue,
+          'blue-pressed': c.arguello.bluePressed,
+          purple: c.arguello.purple,
+          teal: c.arguello.teal,
         },
         success: c.semantic.success,
         warning: c.semantic.warning,

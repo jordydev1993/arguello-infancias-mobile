@@ -1,6 +1,6 @@
-# 📱 Cielo Móvil — Resumen de Documentación
+# 📱 Argüello Infancias Mobile — Resumen de Documentación
 
-## ¿Qué es Cielo Móvil?
+## ¿Qué es Argüello Infancias Mobile?
 
 Aplicación móvil para **acompañamiento diario de NNA en residencias** bajo protección judicial. 
 
@@ -21,7 +21,7 @@ Complemento del sistema web institucional — enfocado en educadores y operadore
 - Modelos de datos
 - Seguridad y autenticación
 
-### 3. **03-CIELO-MOBILE-FEATURES.md** ✅ NUEVO
+### 3. **03-ARGUELLO-MOBILE-FEATURES.md** ✅ NUEVO
 **6 Features (capacidades concretas del usuario):**
 1. **F1** — Consultar información de residentes
 2. **F2** — Registrar novedades del turno
@@ -30,7 +30,7 @@ Complemento del sistema web institucional — enfocado en educadores y operadore
 5. **F5** — Consultar novedades y tareas del turno
 6. **F6** — Reportar situación crítica
 
-### 4. **04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md** ✅ NUEVO
+### 4. **04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md** ✅ NUEVO
 **51 criterios de aceptación** (DADO-CUANDO-ENTONCES)
 - 7 criterios para F1
 - 10 criterios para F2
@@ -41,7 +41,7 @@ Complemento del sistema web institucional — enfocado en educadores y operadore
 
 **Un criterio = Una prueba verificable**
 
-### 5. **05-CIELO-MOBILE-WIREFRAMES.md** ✅ NUEVO
+### 5. **05-ARGUELLO-MOBILE-WIREFRAMES.md** ✅ NUEVO
 **15 wireframes** (soporte visual, no Features adicionales)
 - WF-01 Login
 - WF-02 Inicio/Dashboard
@@ -59,7 +59,7 @@ Complemento del sistema web institucional — enfocado en educadores y operadore
 - WF-14 Registrar situación crítica
 - WF-15 Confirmar situación crítica
 
-### 6. **06-CIELO-MOBILE-FLUJOS-NAVEGACION.md** ✅ NUEVO
+### 6. **06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md** ✅ NUEVO
 **Flujos de usuario** entre pantallas
 - Flujo general de la app
 - Flujos por Feature (F1-F6)
@@ -101,7 +101,7 @@ Tienes TODO listo para implementar:
 ### OPCIÓN A: Envía a Claude Code (inmediato)
 
 ```
-Tengo documentación completa de Cielo Móvil:
+Tengo documentación completa de Argüello Infancias Mobile:
 - 01-documento-alcance.md
 - 02-arquitectura.md
 - 03-FEATURES.md (6 features)
@@ -163,7 +163,7 @@ Tengo documentación completa de Cielo Móvil:
 **Cuando envíes los archivos a Claude Code, incluye:**
 
 ```markdown
-# Brief: Cielo Móvil v1
+# Brief: Argüello Infancias Mobile v1
 
 ## Documentación
 
@@ -204,10 +204,10 @@ Genera:
 
 1. ✅ `01-documento-alcance.md`
 2. ✅ `02-arquitectura.md`
-3. ✅ `03-CIELO-MOBILE-FEATURES.md` (creado hoy)
-4. ✅ `04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md` (creado hoy)
-5. ✅ `05-CIELO-MOBILE-WIREFRAMES.md` (creado hoy)
-6. ✅ `06-CIELO-MOBILE-FLUJOS-NAVEGACION.md` (creado hoy)
+3. ✅ `03-ARGUELLO-MOBILE-FEATURES.md` (creado hoy)
+4. ✅ `04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md` (creado hoy)
+5. ✅ `05-ARGUELLO-MOBILE-WIREFRAMES.md` (creado hoy)
+6. ✅ `06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md` (creado hoy)
 
 **Bonus:**
 - `AGENTS-MOBILE.md` (si necesitas metodología de desarrollo)

@@ -1,8 +1,8 @@
-# Features — Cielo Móvil
+# Features — Argüello Infancias Mobile
 
 ## 1. Objetivo
 
-Este documento define las funcionalidades principales de Cielo Móvil. Una Feature representa una capacidad concreta que permite al usuario realizar una acción, consultar información o alcanzar un objetivo.
+Este documento define las funcionalidades principales de Argüello Infancias Mobile. Una Feature representa una capacidad concreta que permite al usuario realizar una acción, consultar información o alcanzar un objetivo.
 
 La versión inicial contempla **6 Features**.
 

@@ -1,8 +1,8 @@
-# 🚀 BRIEF PARA CLAUDE CODE — Cielo Móvil v1
+# 🚀 BRIEF PARA CLAUDE CODE — Argüello Infancias Mobile v1
 
 ## Resumen Ejecutivo
 
-**Cielo Móvil** es una aplicación móvil para acompañamiento diario de menores (NNA) en residencias bajo protección judicial.
+**Argüello Infancias Mobile** es una aplicación móvil para acompañamiento diario de menores (NNA) en residencias bajo protección judicial.
 
 **Usuarios finales:** Educadores y operadores convivenciales  
 **Stack:** Expo + React Native + TypeScript + Supabase  
@@ -17,10 +17,10 @@
 
 1. `01-documento-alcance.md` — Alcance, objetivos, requisitos
 2. `02-arquitectura.md` — Stack, componentes, modelos de datos
-3. `03-CIELO-MOBILE-FEATURES.md` — 6 Features detalladas + flujos
-4. `04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md` — 51 criterios (DADO-CUANDO-ENTONCES)
-5. `05-CIELO-MOBILE-WIREFRAMES.md` — 15 wireframes con especificaciones
-6. `06-CIELO-MOBILE-FLUJOS-NAVEGACION.md` — Navegación entre pantallas
+3. `03-ARGUELLO-MOBILE-FEATURES.md` — 6 Features detalladas + flujos
+4. `04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md` — 51 criterios (DADO-CUANDO-ENTONCES)
+5. `05-ARGUELLO-MOBILE-WIREFRAMES.md` — 15 wireframes con especificaciones
+6. `06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md` — Navegación entre pantallas
 
 **Bonus:** `AGENTS-MOBILE.md` (metodología de desarrollo)
 
@@ -67,7 +67,7 @@
 ### PASO 1: Crear Estructura del Proyecto
 
 ```bash
-cielo-mobile/
+arguello-infancias-mobile/
 ├── app/
 │   ├── (auth)/
 │   │   ├── login.tsx
@@ -133,8 +133,8 @@ cielo-mobile/
 ### PASO 2: Configuración Inicial
 
 **app.json:**
-- Nombre: "Cielo Móvil"
-- Identificador: com.cielo.mobile
+- Nombre: "Argüello Infancias Mobile"
+- Identificador: com.arguello.infancias.mobile
 - Versión: 1.0.0
 - Soporte para iOS y Android
 - Orientación: portrait
@@ -353,8 +353,8 @@ Fondo: #FFFFFF (blanco)
 
 **Comando para empezar:**
 ```bash
-npx create-expo-app cielo-mobile --template
-cd cielo-mobile
+npx create-expo-app arguello-infancias-mobile --template
+cd arguello-infancias-mobile
 npm install
 expo start
 ```
@@ -377,10 +377,10 @@ expo start
 
 - **Documentación:** `/outputs/01-*.md` a `/outputs/06-*.md`
 - **Metodología:** `/outputs/AGENTS-MOBILE.md`
-- **Features detalladas:** `/outputs/03-CIELO-MOBILE-FEATURES.md`
-- **Criterios de testing:** `/outputs/04-CIELO-MOBILE-CRITERIOS-ACEPTACION.md`
-- **Wireframes referencia:** `/outputs/05-CIELO-MOBILE-WIREFRAMES.md`
-- **Navegación:** `/outputs/06-CIELO-MOBILE-FLUJOS-NAVEGACION.md`
+- **Features detalladas:** `/outputs/03-ARGUELLO-MOBILE-FEATURES.md`
+- **Criterios de testing:** `/outputs/04-ARGUELLO-MOBILE-CRITERIOS-ACEPTACION.md`
+- **Wireframes referencia:** `/outputs/05-ARGUELLO-MOBILE-WIREFRAMES.md`
+- **Navegación:** `/outputs/06-ARGUELLO-MOBILE-FLUJOS-NAVEGACION.md`
 
 ---
 

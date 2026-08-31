@@ -1,7 +1,7 @@
 {
-  "$description": "Design tokens de Cielo Móvil. Fuente: docs/DESIGN-SYSTEM-CIELO-MOBILE.md. Consumido por tailwind.config.js.",
+  "$description": "Design tokens de Argüello Infancias Mobile. Fuente: docs/DESIGN-SYSTEM-ARGUELLO-MOBILE.md. Consumido por tailwind.config.js.",
   "color": {
-    "cielo": {
+    "arguello": {
       "blue": "#007AFF",
       "bluePressed": "#0051D5",
       "purple": "#7C3AED",

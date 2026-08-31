@@ -40,10 +40,10 @@ export default function LoginScreen() {
           contentContainerClassName="grow justify-center gap-6 px-6 py-10"
           keyboardShouldPersistTaps="handled">
           <View className="items-center gap-2">
-            <View className="h-16 w-16 items-center justify-center rounded-2xl bg-cielo-blue">
-              <Text className="font-bold text-h2 text-white">C</Text>
+            <View className="h-16 w-16 items-center justify-center rounded-2xl bg-arguello-blue">
+              <Text className="font-bold text-h2 text-white">A</Text>
             </View>
-            <Text className="font-bold text-h1 text-ink">Cielo Móvil</Text>
+            <Text className="font-bold text-h1 text-ink">Argüello Infancias</Text>
             <Text className="text-center text-body-sm text-ink-secondary">
               Acompañamiento diario en la residencia
             </Text>

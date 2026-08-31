@@ -1,4 +1,4 @@
-# Estado del Scaffold — Cielo Móvil
+# Estado del Scaffold — Argüello Infancias Mobile
 
 > Generado el 2026-08-31. Punto de partida: `docs/BRIEF-CLAUDE-CODE.md`.
 > Alcance acordado: **solo scaffold** (10 entregables del BRIEF) + **F1 navegable con mock**.
@@ -9,7 +9,7 @@
 ## 1. Resumen
 
 El proyecto `mobile/` pasó de ser el template starter de Expo (SDK 54) al **andamiaje de
-Cielo Móvil**. Arranca en `npx expo start`, muestra login → tabs (Inicio · Residentes ·
+Argüello Infancias Mobile**. Arranca en `npx expo start`, muestra login → tabs (Inicio · Residentes ·
 Mi turno · Crítica · Perfil) y la **Feature F1 (consultar residentes)** funciona de punta a
 punta sobre **datos mock**. F2–F6 tienen su lugar en tipos, validación y navegación pero
 todavía no están implementadas.
@@ -37,17 +37,17 @@ todavía no están implementadas.
 
 | Archivo | Rol |
 |---|---|
-| `tailwind.config.js` | Paleta (`cielo`, `critical`, `success`…), escala tipográfica y familias Poppins. Lee `design-tokens.json`. |
+| `tailwind.config.js` | Paleta (`arguello`, `critical`, `success`…), escala tipográfica y familias Poppins. Lee `design-tokens.json`. |
 | `babel.config.js` | `babel-preset-expo` con `jsxImportSource: 'nativewind'` + `nativewind/babel`. |
 | `metro.config.js` | `withNativeWind(config, { input: './src/global.css' })`. |
 | `src/global.css` | Directivas `@tailwind` + variables de fuente. |
 | `nativewind-env.d.ts` | Tipos de `className`. |
 | `design-tokens.json` | Fuente única de la paleta / tipografía (design system §2). |
-| `app.json` | `name` "Cielo Móvil", `scheme` `cielomovil`, `bundleIdentifier`/`package` `com.cielo.mobile`, splash azul, `userInterfaceStyle: light`. **Se quitó `experiments.reactCompiler`** (incompatible con `jsxImportSource: nativewind`). |
+| `app.json` | `name` "Argüello Infancias Mobile", `scheme` `arguelloinfanciasmobile`, `bundleIdentifier`/`package` `com.arguello.infancias.mobile`, splash azul, `userInterfaceStyle: light`. **Se quitó `experiments.reactCompiler`** (incompatible con `jsxImportSource: nativewind`). |
 | `.env.example` | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`. |
 | `eas.json` | Perfiles `development` / `preview` / `production`. |
 | `.gitignore` | Se agregó `.env`. |
-| `AGENTS.md` | Apunta a docs de Expo **v54** y describe el contexto Cielo. |
+| `AGENTS.md` | Apunta a docs de Expo **v54** y describe el contexto Argüello Infancias. |
 | `README.md` | Reescrito: qué es, stack, cómo correr, credenciales, estructura, próximos pasos. |
 
 ### Decisiones técnicas

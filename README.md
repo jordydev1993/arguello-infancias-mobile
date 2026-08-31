@@ -1,7 +1,7 @@
-# Cielo Móvil
+# Argüello Infancias Mobile
 
 Aplicación móvil para el **acompañamiento diario de NNA** en residencias bajo protección
-judicial. Es el complemento móvil del sistema web institucional "Cielo Abierto" y está pensada
+judicial. Es el complemento móvil del sistema web institucional "Argüello Infancias" y está pensada
 para **educadores y operadores convivenciales** durante el turno.
 
 > Trabajo Final / Tesis — Aplicación Móvil mediante Aprendizaje Basado en Proyectos (ABP).
@@ -84,5 +84,5 @@ docs/                  # documentación prescriptiva (features, criterios, wiref
 ## Documentación
 
 Ver `docs/`: `03-...FEATURES.md` (6 Features), `04-...CRITERIOS-ACEPTACION.md` (51 CA),
-`05-...WIREFRAMES.md` (15 WF), `06-...FLUJOS-NAVEGACION.md`, `DESIGN-SYSTEM-CIELO-MOBILE.md`.
+`05-...WIREFRAMES.md` (15 WF), `06-...FLUJOS-NAVEGACION.md`, `DESIGN-SYSTEM-ARGUELLO-MOBILE.md`.
 Metodología de desarrollo en `AGENTS.md`.

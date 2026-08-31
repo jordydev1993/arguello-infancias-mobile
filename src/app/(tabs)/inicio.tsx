@@ -48,7 +48,7 @@ export default function InicioScreen() {
           <View className="gap-2 rounded-lg border border-line bg-surface p-4">
             <View className="flex-row items-center justify-between">
               <Text className="font-semibold text-h4 text-ink">Turno de hoy</Text>
-              <Text className="font-semibold text-caption text-cielo-blue">
+              <Text className="font-semibold text-caption text-arguello-blue">
                 {SHIFT_STATUS_LABEL[data.shift.status]}
               </Text>
             </View>

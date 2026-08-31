@@ -1,4 +1,4 @@
-# Documento de Alcance — Arguello Móvil
+# Documento de Alcance — Argüello Infancias Mobile
 
 ## 1. Nombre del proyecto
 
@@ -6,7 +6,7 @@
 
 ## 2. Contexto
 
-Arguello Móvil se plantea como una aplicación móvil complementaria al sistema de gestión de residencias. Su objetivo es facilitar al personal que realiza el acompañamiento diario el acceso y registro de información durante la jornada.
+Argüello Infancias Mobile se plantea como una aplicación móvil complementaria al sistema de gestión de residencias. Su objetivo es facilitar al personal que realiza el acompañamiento diario el acceso y registro de información durante la jornada.
 
 La propuesta se enfoca en el proceso de **Acompañamiento Diario de los NNA**, que contempla el inicio de la jornada, revisión de novedades, rutinas y actividades, registro de observaciones y traspaso de información al turno siguiente.
 

@@ -22,7 +22,7 @@ export function PrimaryButton({
       className={[
         'h-12 flex-row items-center justify-center rounded-lg px-6',
         fullWidth ? 'w-full' : 'self-start',
-        isDisabled ? 'bg-line' : 'bg-cielo-blue active:bg-cielo-blue-pressed',
+        isDisabled ? 'bg-line' : 'bg-arguello-blue active:bg-arguello-blue-pressed',
       ].join(' ')}
       {...rest}>
       {loading ? (

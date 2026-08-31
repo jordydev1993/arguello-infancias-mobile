@@ -74,7 +74,7 @@ Diagram de cliente → backend → base de datos con flujos HTTPS + JWT.
 ### 4. Estructura de Carpetas
 
 ```
-cielo-mobile/
+arguello-infancias-mobile/
 ├── app/ (Expo Router)
 ├── components/ (reutilizables)
 ├── hooks/ (lógica compartida)
@@ -239,7 +239,7 @@ Ambos tenemos las 6 Features, pero ahora están:
 
 - **01-documento-alcance.md** → Alcance general
 - **02-arquitectura.md** → Arquitectura web (compartida)
-- **03-CIELO-MOBILE-FEATURES.md** → Detalle Features (110%)
+- **03-ARGUELLO-MOBILE-FEATURES.md** → Detalle Features (110%)
 - **04-CRITERIOS-ACEPTACION.md** → 51 criterios verificables
 - **05-WIREFRAMES.md** → 15 wireframes de UI
 - **06-FLUJOS-NAVEGACION.md** → Navegación entre pantallas

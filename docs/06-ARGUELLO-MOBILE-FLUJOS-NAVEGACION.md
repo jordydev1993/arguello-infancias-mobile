@@ -1,8 +1,8 @@
-# Flujos de Navegación — Cielo Móvil
+# Flujos de Navegación — Argüello Infancias Mobile
 
 ## Objetivo
 
-Definir cómo se desplaza el usuario entre las diferentes partes de Cielo Móvil. Los flujos muestran cómo cada Feature se transforma en una secuencia de interacciones.
+Definir cómo se desplaza el usuario entre las diferentes partes de Argüello Infancias Mobile. Los flujos muestran cómo cada Feature se transforma en una secuencia de interacciones.
 
 **Las pantallas son elementos de implementación. El producto mantiene 6 Features, independientemente de la cantidad de pantallas utilizadas.**
 
@@ -525,7 +525,7 @@ Swipe derecha
   └─ Opcional (si se implementa)
 ```
 
-### En Cielo Móvil
+### En Argüello Infancias Mobile
 
 ```
 - Botón "Atrás" SIEMPRE presente (excepto Inicio)
