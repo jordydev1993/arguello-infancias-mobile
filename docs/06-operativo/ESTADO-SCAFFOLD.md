@@ -3,6 +3,10 @@
 > Generado el 2026-08-31. Punto de partida: `docs/BRIEF-CLAUDE-CODE.md`.
 > Alcance acordado: **solo scaffold** (10 entregables del BRIEF) + **F1 navegable con mock**.
 > Estilos: **NativeWind v4 estable**. Template Expo demo: **reemplazado**.
+>
+> **Actualización 2026-09-03:** migrado a **Expo SDK 57** (RN 0.86, React 19.2) porque
+> Expo Go de tienda dejó de abrir proyectos SDK 54. Ver `prompts/02-migracion-sdk-57-plan.md`.
+> `app.json` → `version` `1.1.0` (separa los updates OTA de la nueva SDK).
 
 ---
 
@@ -52,8 +56,9 @@ todavía no están implementadas.
 
 ### Decisiones técnicas
 
-- **Expo SDK 54** (compatibilidad con Expo Go). Se bajó desde SDK 57.
-- **NativeWind v4** (Tailwind v3): combinación estable para SDK 54; se descartó el preview v5.
+- **Expo SDK 57** (RN 0.86, React 19.2). El proyecto nació bajándose a SDK 54; el 2026-09-03
+  se volvió a subir a 57 porque Expo Go de App Store / Play Store dejó de abrir SDK 54.
+- **NativeWind v4** (Tailwind v3): sigue estable en SDK 57 (4.2.6, sin cambios de config).
 - **Zustand sin `zustand/middleware`**: el barrel incluye código `import.meta.env` del middleware
   `devtools` que rompe el bundle web con Metro. Persistencia manual con `src/lib/storage.ts`
   (`AsyncStorage` para cache no sensible, `SecureStore` para tokens a futuro) + `hydrate()` en
