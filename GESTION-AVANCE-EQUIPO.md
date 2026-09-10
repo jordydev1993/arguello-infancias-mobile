@@ -4,6 +4,8 @@ Controlador de avance del proyecto Argüello Infancias (web + mobile + modelo de
 
 **Tablero:** https://github.com/users/jordydev1993/projects/1 (GitHub Projects — `jordydev1993`)
 
+**Proceso de trabajo paso a paso** (de la tarjeta al merge): `GUIA-PROCESO-COMPLETO.md`
+
 ---
 
 ## Quiénes
