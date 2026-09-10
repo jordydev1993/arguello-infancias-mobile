@@ -8,12 +8,12 @@ Controlador de avance del proyecto Argüello Infancias (web + mobile + modelo de
 
 ## Quiénes
 
-| Persona | Rol | Filtra su trabajo con |
-|---|---|---|
-| Jordy | Producto / desarrollo / decisiones de arquitectura y seguridad | `Responsable = Jordy` |
-| Meli | QA / testing | `Responsable = Meli` |
-| Cami | UI/UX | `Responsable = Cami` |
-| Sofi | Base de datos + análisis funcional | `Responsable = Sofi` |
+| Persona | GitHub | Rol | Filtra su trabajo con |
+|---|---|---|---|
+| Jordy | `jordydev1993` | Producto / desarrollo / decisiones de arquitectura y seguridad | `Responsable = Jordy` |
+| Meli | `melanilozano2015-gif` | QA / testing | `Responsable = Meli` |
+| Cami | `Camigalvan` | UI/UX | `Responsable = Cami` |
+| Sofi | `sofiimartineez13-debug` | Base de datos + análisis funcional | `Responsable = Sofi` |
 
 ---
 
