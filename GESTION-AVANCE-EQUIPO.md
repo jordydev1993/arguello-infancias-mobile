@@ -19,9 +19,9 @@ Controlador de avance del proyecto Argüello Infancias (web + mobile + modelo de
 
 ## Cómo se usa
 
-1. **Entrá al tablero** con el link de arriba (aceptá antes la invitación que te llega por mail: una al repo `arguello-infancias-mobile`, otra a `cielo-abierto`, y una al Project).
+1. **Aceptá la invitación al Project** que te llega por mail (o en https://github.com/notifications), y entrá al tablero con el link de arriba.
 2. **Vista "Por responsable"** (la que abre por defecto): están las 4 personas, y dentro de cada una sus tarjetas ordenadas por estado. El avance de cada quien se lee ahí: *tarjetas en `Hecha` / total*.
-3. **Actualizá solo tus tarjetas.** Cada uno mueve las suyas y cierra su issue cuando termina.
+3. **Actualizá solo tus tarjetas.** Cada uno mueve las suyas de estado a medida que avanza. Sos colaborador/a del Project (no de los repos): editás los campos de las tarjetas, no el código.
 4. Si una tarjeta te frena, ponela en `Bloqueada` y escribí en el campo **Nota** qué falta o de quién depende.
 
 ### Estados
@@ -32,7 +32,7 @@ Controlador de avance del proyecto Argüello Infancias (web + mobile + modelo de
 | `En curso` | La estás haciendo esta semana |
 | `Bloqueada` | No podés avanzar hasta que se resuelva algo (anotarlo en **Nota**) |
 | `En revisión` | Terminada, esperando que alguien la valide / apruebe |
-| `Hecha` | Cerrada. También cerrá el issue en GitHub. |
+| `Hecha` | Terminada y validada. (Cerrar el issue de GitHub es opcional — lo hace Jordy en la revisión semanal.) |
 
 ### Campos
 
@@ -56,8 +56,9 @@ Controlador de avance del proyecto Argüello Infancias (web + mobile + modelo de
 
 Lunes, 10 minutos, sobre la vista **Tabla**:
 - Cada uno pasa sus `En curso` y `Bloqueada`.
-- Se destraban los bloqueos (o se asigna a quien corresponda).
-- Se agregan tarjetas nuevas que hayan aparecido (cualquiera puede crear un issue con el label `area:*` y sumarlo al Project).
+- Se destraban los bloqueos (o se reasigna el `Responsable` a quien corresponda).
+- Jordy cierra los issues de las tarjetas que quedaron en `Hecha`.
+- Se agregan tarjetas nuevas que hayan aparecido (Jordy crea el issue con el label `area:*` y lo suma al Project; el resto puede pedirlo por la **Nota** de una tarjeta o en el grupo).
 
 ---
 
