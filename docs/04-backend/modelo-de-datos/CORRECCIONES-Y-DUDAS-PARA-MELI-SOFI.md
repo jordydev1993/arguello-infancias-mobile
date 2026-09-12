@@ -22,9 +22,9 @@ Verifiqué el schema real corriendo `list_tables` / consultas directas contra el
 
 | Propuesto en el docx | Ya existe en la web | Corrección |
 |---|---|---|
-| `perfiles_usuarios` (id = auth.users, `rol` CHECK educador/coordinador) | `usuarios` + `roles` (rol normalizado vía `rol_id` FK, `auth_user_id` nullable — **no** `id = auth.users(id)` directo) | **No crear `perfiles_usuarios`.** Reusar `usuarios`/`roles`. Los roles reales hoy son: `Admin`, `Administrador`, `Equipo Tecnico`, `Trabajador Social`, `Psicólogo/a`, `Médico/a`, `Abogado/a`. Ninguno es "educador" ni "coordinador" — ver duda #1. |
+| `perfiles_usuarios` (id = auth.users, `rol` CHECK educador/coordinador) | `usuarios` + `roles` (rol normalizado vía `rol_id` FK, `auth_user_id` nullable — **no** `id = auth.users(id)` directo) | **No crear `perfiles_usuarios`.** Reusar `usuarios`/`roles`. Decisión #1 (§3): `Equipo Tecnico` ≈ educador, `Admin`/`Administrador` ≈ coordinador — no se agregan roles nuevos. |
 | `residentes` (nombre, foto_url, fecha_nacimiento, escuela, turno_escolar, alertas_importantes) | `nnya` (18 columnas: dni, nacionalidad, domicilio, escolaridad, obra_social, numero_expediente, estado_actual, fecha_egreso...) | **No crear `residentes`.** Reusar `nnya`. Agregar como columnas nuevas (migración, no tabla nueva): `foto_url`, `alertas_importantes`, `turno_escolar`. |
-| `turnos_trabajo` + `residentes_turnos` | `turnos_personal` (usuario_id, fecha, turno, hora_inicio/cierre, y **traspaso de guardia**: entregado_por/at, recibido_por/at) | **No crear `turnos_trabajo`.** `turnos_personal` ya cubre el concepto y es más completo (maneja el handover entre guardias, que el docx no contempla). `residentes_turnos` (qué NNA está bajo qué guardia) no tiene equivalente — ver duda #2 antes de crearla. |
+| `turnos_trabajo` + `residentes_turnos` | `turnos_personal` (usuario_id, fecha, turno, hora_inicio/cierre, y **traspaso de guardia**: entregado_por/at, recibido_por/at) | **No crear `turnos_trabajo`.** `turnos_personal` ya cubre el concepto y es más completo (maneja el handover entre guardias, que el docx no contempla). `residentes_turnos` **no se crea** — decisión #2 (§3): la guardia atiende a todos los residentes, no hay asignación individual. |
 | `novedades` | No hay equivalente exacto | **Es genuinamente nueva.** `intervenciones`/`informes` son registros formales de legajo; `novedades` es un diario liviano en tiempo real, un caso de uso distinto. Sí crearla, pero con la columna `nnya_id` (no `residente_id`) para no romper la convención de nombres del resto de la base. |
 | `actividades_diarias` | `actividades` (soporta grupo vía `nnya_ids` array, `hora_inicio`/`hora_fin`, `lugar`, `estado` en vez de booleano) | **No crear `actividades_diarias`.** Reusar `actividades`, filtrando por un `nnya_id` al leer. La propuesta original es un downgrade de lo que ya existe. |
 | `situaciones_criticas` | `incidentes` (gravedad, reportado_por, acciones_tomadas, y **`gravedad_sugerida`/`sugerencia_aceptada`** — el modelo de predicción con IA que ya está en producción vía `/api/incidentes/prediccion`) | **No crear `situaciones_criticas`. Este es el hallazgo más serio.** Si mobile tiene su propia tabla de emergencias, quedan invisibles para el sistema de predicción y para los legajos del lado web. Reusar `incidentes`. |
@@ -34,26 +34,30 @@ Verifiqué el schema real corriendo `list_tables` / consultas directas contra el
 
 ---
 
-## 3. Dudas que necesitamos que resuelvan ustedes
+## 3. Dudas — resueltas (2026-09-12)
 
-Estas son decisiones de negocio / análisis funcional, no las resolvimos del lado técnico:
+Decisión de Jordy. Quedan cerradas; el resto de este documento y `RECOMENDACIONES-MODELO-DATOS.md`/`RESUMEN-SESION-MODELO-DATOS.md`/`CORRECCIONES-MODELO-DATOS-ARGUELLO.md` deben reescribirse con estas 4 respuestas como base (issues #5–#8 del tablero).
 
-1. **Roles para mobile.** ¿"Educador" y "Coordinador" se agregan como roles nuevos en la tabla `roles` existente, o se mapean a roles que ya están (`Equipo Tecnico` ≈ educador, `Admin`/`Administrador` ≈ coordinador)? Afecta directo a las políticas RLS que hay que escribir.
+1. **Roles para mobile → se mapean a los roles que ya existen.** `Equipo Tecnico` ≈ educador, `Admin`/`Administrador` ≈ coordinador. **No se agregan roles nuevos.**
+   Evidencia que respalda esto: la web **ya hizo este mismo mapeo**. La migración `supabase/migrations/20260522000027_remove_educador_role.sql` eliminó el rol "Educador" y reasignó a esos usuarios a "Equipo Tecnico", con el comentario *"Los casos de uso del sistema definen Actor: todos"*. Mobile sigue el mismo criterio ya aplicado en producción.
 
-2. **`residentes_turnos` (¿hace falta?).** El docx asume que hay que saber explícitamente qué NNA está asignado a qué turno de guardia. Pero ¿en la operación real de la residencia, el personal de guardia ve/atiende a **todos** los residentes de la residencia, o hay asignación específica por chico? Si es lo primero, esa tabla sobra para el MVP.
+2. **`residentes_turnos` → no hace falta.** El personal de guardia atiende a **todos** los residentes de la residencia durante su turno, no hay asignación específica por chico.
+   Evidencia: `documentacion/procesos-del-negocio.md` y `procesosRelevados.md` describen la jornada con los educadores actuando sobre "los NNA" en plural ("despiertan a los NNA y acompañan en higiene personal"), sin ninguna asignación individual documentada. `turnos_personal` (ya construida en web) modela el traspaso de guardia entre personal — no una relación NNA↔educador. Se descarta esta tabla.
 
-3. **Un solo Supabase o dos.** ¿Mobile va a pegarle al **mismo proyecto Supabase** que usa la web (mismo `nnya`, `usuarios`, `incidentes`, etc.), o a un proyecto separado? Todo este documento asume que es el mismo proyecto — si no lo es, la razón entera de "reusar en vez de duplicar" no aplica y habría que decirlo explícitamente.
+3. **Un solo Supabase → sí, el mismo que usa la web.** Mobile pega contra el mismo proyecto (`nnya`, `usuarios`, `incidentes`, etc.), no uno separado. Esto confirma la premisa central de la sección 2: reusar en vez de duplicar aplica tal cual.
 
-4. **Arquitectura de acceso a datos.** El `AGENTS.md` de mobile describe una API intermedia en Express.js entre la app y Supabase. `mobile/src/lib/supabase.ts` está armado para pegarle directo a Supabase desde el cliente (patrón típico de apps Supabase, con RLS haciendo de guardia). Son dos arquitecturas distintas — ¿cuál va?
+4. **Arquitectura de acceso a datos → cliente directo a Supabase.** Sin API intermedia en Express. `mobile/src/lib/supabase.ts` (ya armado, sin usar todavía) es el camino correcto; RLS hace de guardia en la base, igual que en la web. La descripción de una capa Express en `AGENTS.md` § Arquitectura queda descartada — hay que corregir ese archivo (issue #8).
 
 ---
 
 ## 4. Qué documentos quedan desactualizados
 
-Si confirman el enfoque de reusar la base web, estos tres archivos de esta misma carpeta van a necesitar reescritura (no los tocamos todavía, quedan a la espera de que resuelvan las dudas de arriba):
+Con las 4 decisiones de §3 ya tomadas, estos archivos de esta misma carpeta quedan pendientes de reescritura (issues #5–#7 del tablero):
 
 - `RESUMEN-SESION-MODELO-DATOS.md`
 - `RECOMENDACIONES-MODELO-DATOS.md`
 - `CORRECCIONES-MODELO-DATOS-ARGUELLO.md`
 
-Y el `AGENTS.md` de mobile (sección "[5] MODELO DE DATOS") también da por sentadas las 7 tablas originales.
+Y `AGENTS.md` de mobile (sección "[5] MODELO DE DATOS" — 7 tablas viejas, y sección "[3] ARQUITECTURA" — describe una capa Express que la decisión #4 descarta) — issue #8.
+
+Con esto resuelto, quedan destrabadas: la migración de columnas nuevas en `nnya` (issue #9), la creación de `novedades` (issue #10), y conectar mobile a Supabase (issue #16).
