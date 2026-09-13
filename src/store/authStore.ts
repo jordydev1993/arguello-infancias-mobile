@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import type { User, UserRole } from '@/types/user';
-import { getSupabase } from '@/lib/supabase';
+import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
 
 type LoginResult = { ok: true } | { ok: false; error: string };
 
@@ -51,6 +51,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   hydrate: async () => {
     if (get().hydrated) return;
+    if (!isSupabaseConfigured) {
+      set({ user: null, hydrated: true });
+      return;
+    }
     const { data } = await getSupabase().auth.getSession();
     const session = data.session;
     if (!session) {
@@ -62,6 +66,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   login: async (email, password) => {
+    if (!isSupabaseConfigured) {
+      return {
+        ok: false,
+        error: 'Falta configurar Supabase. Copiá .env.example a .env y completá las variables.',
+      };
+    }
     const supabase = getSupabase();
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error || !data.session) {
@@ -82,7 +92,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: () => {
-    void getSupabase().auth.signOut();
+    if (isSupabaseConfigured) void getSupabase().auth.signOut();
     set({ user: null });
   },
 }));
