@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,6 +8,7 @@ import { AlertCard } from '@/components/AlertCard';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ErrorState } from '@/components/common/ErrorState';
 import { LoadingState } from '@/components/common/LoadingState';
+import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { ResidentStatusBadge } from '@/components/ui/StatusBadge';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { useActivities } from '@/hooks/useActivities';
@@ -135,18 +136,22 @@ function NovedadesTab({ minorId }: { minorId: string }) {
   const items = data ?? [];
   return (
     <View className="gap-3">
-      <PendingFeatureNote feature="F2" />
+      <PrimaryButton
+        label="+ Nueva novedad"
+        fullWidth={false}
+        onPress={() => router.push({ pathname: '/nueva-novedad', params: { minorId } })}
+      />
       {items.length === 0 ? (
         <EmptyState icon="document-text-outline" title="No hay novedades registradas" />
       ) : (
         items.map((o) => (
           <View key={o.id} className="gap-1 rounded-md border border-line bg-canvas p-3">
             <Text className="font-semibold text-body-sm text-arguello-blue">
-              {OBSERVATION_CATEGORY_LABELS[o.category]}
+              {OBSERVATION_CATEGORY_LABELS[o.tipo]}
             </Text>
-            <Text className="text-body-md text-ink">{o.content}</Text>
+            <Text className="text-body-md text-ink">{o.descripcion}</Text>
             <Text className="text-caption text-ink-secondary">
-              {formatFechaHora(o.observation_date)} · {o.reported_by_name}
+              {formatFechaHora(o.fecha_hora)} · {o.usuario_nombre ?? 'Usuario desconocido'}
             </Text>
           </View>
         ))
@@ -162,10 +167,10 @@ function HistorialTab({ minorId }: { minorId: string }) {
 
   const entries = [
     ...(observations.data ?? []).map((o) => ({
-      at: o.observation_date,
+      at: o.fecha_hora,
       kind: 'Novedad',
-      text: o.content,
-      by: o.reported_by_name,
+      text: o.descripcion,
+      by: o.usuario_nombre ?? 'Usuario desconocido',
     })),
     ...(activities.data ?? []).map((a) => ({
       at: a.created_at,

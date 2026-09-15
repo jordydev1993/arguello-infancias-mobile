@@ -61,8 +61,8 @@ export function shiftSummaryMock(): ShiftSummary {
   return {
     shift,
     recent_observations: NOVEDADES_MOCK.filter(
-      (o) => shift.assigned_minor_ids.includes(o.minor_id) && +new Date(o.observation_date) >= desde,
-    ).sort((a, b) => +new Date(b.observation_date) - +new Date(a.observation_date)),
+      (o) => shift.assigned_minor_ids.includes(o.nnya_id) && +new Date(o.fecha_hora) >= desde,
+    ).sort((a, b) => +new Date(b.fecha_hora) - +new Date(a.fecha_hora)),
     pending_tasks: TAREAS_MOCK.filter((t) => t.status === 'pendiente').sort(
       (a, b) => +new Date(a.due_at) - +new Date(b.due_at),
     ),

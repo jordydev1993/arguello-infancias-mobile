@@ -14,11 +14,11 @@ export const LoginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof LoginSchema>;
 
-/** F2 — Registrar novedad (CA-08 a CA-14). */
+/** F2 — Registrar novedad (CA-08 a CA-14). Campos alineados a la tabla real `novedades`. */
 export const ObservationSchema = z.object({
-  minor_id: z.string().min(1, 'Seleccioná un residente'),
-  category: z.enum(OBSERVATION_CATEGORIES, { message: 'Elegí un tipo de novedad' }),
-  content: z
+  nnya_id: z.string().min(1, 'Seleccioná un residente'),
+  tipo: z.enum(OBSERVATION_CATEGORIES, { message: 'Elegí un tipo de novedad' }),
+  descripcion: z
     .string()
     .trim()
     .min(10, 'La descripción debe tener al menos 10 caracteres')
