@@ -3,21 +3,24 @@
  * Fuente: docs/02-especificaciones/03-ARGUELLO-MOBILE-FEATURES.md
  */
 
+/** Valores reales del CHECK de `novedades.tipo` (verificado contra la DB, no el wireframe). */
 export const OBSERVATION_CATEGORIES = [
-  'conducta',
-  'emocional',
-  'educativo',
-  'sanitario',
-  'otro',
+  'Salud',
+  'Educación',
+  'Comportamiento',
+  'Alimentación',
+  'Visita Familiar',
+  'Otro',
 ] as const;
 export type ObservationCategory = (typeof OBSERVATION_CATEGORIES)[number];
 
 export const OBSERVATION_CATEGORY_LABELS: Record<ObservationCategory, string> = {
-  conducta: 'Conducta',
-  emocional: 'Emocional',
-  educativo: 'Educativo',
-  sanitario: 'Sanitario',
-  otro: 'Otro',
+  Salud: 'Salud',
+  Educación: 'Educación',
+  Comportamiento: 'Comportamiento',
+  Alimentación: 'Alimentación',
+  'Visita Familiar': 'Visita Familiar',
+  Otro: 'Otro',
 };
 
 export const ACTIVITY_TYPES = [

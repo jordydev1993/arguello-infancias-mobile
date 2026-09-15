@@ -75,8 +75,8 @@ export default function TurnoScreen() {
                   <AlertCard
                     key={o.id}
                     variant="warning"
-                    title={OBSERVATION_CATEGORY_LABELS[o.category]}
-                    message={o.content}
+                    title={OBSERVATION_CATEGORY_LABELS[o.tipo]}
+                    message={o.descripcion}
                   />
                 ))
               )}
