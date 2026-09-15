@@ -37,17 +37,20 @@ export const ActivitySchema = z.object({
 });
 export type ActivityInput = z.infer<typeof ActivitySchema>;
 
-/** F6 — Reportar situación crítica (CA-43 a CA-47). */
+/**
+ * F6 — Reportar situación crítica (CA-43 a CA-47). Campos alineados a la
+ * tabla real `incidentes` (ver PLAN 08) — sin `people_notified`, no existe
+ * esa columna en la DB.
+ */
 export const CriticalIncidentSchema = z.object({
-  minor_ids: z.array(z.string().min(1)).min(1, 'Seleccioná al menos un residente'),
-  incident_type: z.enum(CRITICAL_INCIDENT_TYPES, { message: 'Elegí el tipo de situación' }),
-  description: z
+  nnya_ids: z.array(z.string().min(1)).min(1, 'Seleccioná al menos un residente'),
+  tipo: z.enum(CRITICAL_INCIDENT_TYPES, { message: 'Elegí el tipo de situación' }),
+  descripcion: z
     .string()
     .trim()
     .min(20, 'La descripción debe tener al menos 20 caracteres')
     .max(1000, 'Máximo 1000 caracteres'),
-  actions_taken: z.string().trim().max(1000).optional(),
-  people_notified: z.array(z.string().min(1)).optional(),
+  acciones_tomadas: z.string().trim().max(1000).optional(),
 });
 export type CriticalIncidentInput = z.infer<typeof CriticalIncidentSchema>;
 
