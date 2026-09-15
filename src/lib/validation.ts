@@ -26,14 +26,15 @@ export const ObservationSchema = z.object({
 });
 export type ObservationInput = z.infer<typeof ObservationSchema>;
 
-/** F4 — Registrar actividad (CA-25 a CA-30). */
+/**
+ * F4 — Registrar actividad (CA-25 a CA-30). `duration_minutes`/`participants`
+ * salen del schema: no existen en la tabla real `actividades` ni los pide WF-10.
+ */
 export const ActivitySchema = z.object({
-  minor_id: z.string().min(1, 'Seleccioná un residente'),
-  activity_type: z.enum(ACTIVITY_TYPES, { message: 'Elegí una actividad' }),
+  nnya_id: z.string().min(1, 'Seleccioná un residente'),
+  tipo: z.enum(ACTIVITY_TYPES, { message: 'Elegí una actividad' }),
   status: z.enum(ACTIVITY_STATUSES, { message: 'Elegí un estado' }),
-  observations: z.string().trim().max(500, 'Máximo 500 caracteres').optional(),
-  duration_minutes: z.coerce.number().int().positive().max(1440).optional(),
-  participants: z.string().trim().max(200).optional(),
+  observaciones: z.string().trim().max(500, 'Máximo 500 caracteres').optional(),
 });
 export type ActivityInput = z.infer<typeof ActivitySchema>;
 

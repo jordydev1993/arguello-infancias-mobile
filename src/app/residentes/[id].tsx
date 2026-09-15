@@ -15,7 +15,7 @@ import { useActivities } from '@/hooks/useActivities';
 import { useObservations } from '@/hooks/useObservations';
 import { useResident } from '@/hooks/useResidents';
 import type { Resident } from '@/types/resident';
-import { OBSERVATION_CATEGORY_LABELS } from '@/utils/constants';
+import { ACTIVITY_TYPE_LABELS, OBSERVATION_CATEGORY_LABELS } from '@/utils/constants';
 import { edadLabel, formatFecha, formatFechaHora, iniciales } from '@/utils/formatters';
 
 const TABS = ['Info', 'Novedades', 'Historial', 'Actividades'] as const;
@@ -175,8 +175,8 @@ function HistorialTab({ minorId }: { minorId: string }) {
     ...(activities.data ?? []).map((a) => ({
       at: a.created_at,
       kind: 'Actividad',
-      text: a.observations ?? a.activity_type,
-      by: a.created_by_name,
+      text: a.observaciones ?? ACTIVITY_TYPE_LABELS[a.tipo],
+      by: a.created_by_nombre ?? 'Usuario desconocido',
     })),
   ].sort((a, b) => +new Date(b.at) - +new Date(a.at));
 
@@ -207,7 +207,11 @@ function ActividadesTab({ minorId }: { minorId: string }) {
   const items = data ?? [];
   return (
     <View className="gap-3">
-      <PendingFeatureNote feature="F4" />
+      <PrimaryButton
+        label="+ Nueva actividad"
+        fullWidth={false}
+        onPress={() => router.push({ pathname: '/nueva-actividad', params: { minorId } })}
+      />
       {items.length === 0 ? (
         <EmptyState icon="checkbox-outline" title="No hay actividades para hoy" />
       ) : (
