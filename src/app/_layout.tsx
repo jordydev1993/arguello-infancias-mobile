@@ -51,6 +51,7 @@ export default function RootLayout() {
             <Stack.Screen name="residentes/[id]" />
             <Stack.Screen name="situacion-critica" />
             <Stack.Screen name="nueva-novedad" />
+            <Stack.Screen name="nueva-actividad" />
           </Stack>
         </QueryClientProvider>
       </SafeAreaProvider>
