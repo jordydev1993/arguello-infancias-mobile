@@ -5,7 +5,6 @@ import {
   ACTIVITY_TYPES,
   CRITICAL_INCIDENT_TYPES,
   OBSERVATION_CATEGORIES,
-  TASK_STATUSES,
 } from '@/utils/constants';
 
 export const LoginSchema = z.object({
@@ -54,13 +53,6 @@ export const CriticalIncidentSchema = z.object({
   acciones_tomadas: z.string().trim().max(1000).optional(),
 });
 export type CriticalIncidentInput = z.infer<typeof CriticalIncidentSchema>;
-
-/** F5 — Actualizar estado de una tarea del turno. */
-export const TaskUpdateSchema = z.object({
-  id: z.string().min(1),
-  status: z.enum(TASK_STATUSES),
-});
-export type TaskUpdateInput = z.infer<typeof TaskUpdateSchema>;
 
 /** Aplana los errores de Zod a un mapa campo → primer mensaje. */
 export function fieldErrors(error: z.ZodError): Record<string, string> {
