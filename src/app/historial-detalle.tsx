@@ -14,6 +14,7 @@ import {
   ACTIVITY_STATUS_LABELS,
   ACTIVITY_TYPE_LABELS,
   CRITICAL_INCIDENT_TYPE_LABELS,
+  labelOrRaw,
   OBSERVATION_CATEGORY_LABELS,
 } from '@/utils/constants';
 import { formatFechaHora } from '@/utils/formatters';
@@ -25,16 +26,6 @@ function Row({ label, value }: { label: string; value: string }) {
       <Text className="text-body-md text-ink">{value}</Text>
     </View>
   );
-}
-
-/**
- * Algunos catálogos de `tipo` no tienen CHECK en la DB real y traen valores
- * libres cargados desde la web que no están en las listas fijas de mobile
- * (ej. "educativa"/"terapeutica" en actividades). Si no hay label, se
- * muestra el valor crudo en vez de una etiqueta vacía.
- */
-function labelOrRaw(labels: Record<string, string>, value: string): string {
-  return labels[value] ?? value;
 }
 
 /**

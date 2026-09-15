@@ -29,6 +29,11 @@ const ESTADO_TO_STATUS: Record<string, ActivityStatus> = {
   cancelada: 'no_realizada',
 };
 
+/** Traduce el `estado` real de la DB al `status` friendly. Reusado por F5 (Mi turno). */
+export function estadoToStatus(estado: string): ActivityStatus {
+  return ESTADO_TO_STATUS[estado] ?? 'pendiente';
+}
+
 type ActivityRow = {
   id: string;
   nnya_ids: string[];
@@ -47,7 +52,7 @@ function toActivity(row: ActivityRow): Activity {
     id: row.id,
     nnya_ids: row.nnya_ids,
     tipo: row.tipo,
-    status: ESTADO_TO_STATUS[row.estado] ?? 'pendiente',
+    status: estadoToStatus(row.estado),
     observaciones: row.observaciones,
     fecha: row.fecha,
     created_by: row.created_by,
