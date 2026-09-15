@@ -5,7 +5,37 @@ import { getSupabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 
 const INCIDENT_FIELDS =
-  'id, nnya_id, tipo, descripcion, fecha_hora, gravedad, reportado_por, acciones_tomadas, estado, created_at';
+  'id, nnya_id, tipo, descripcion, fecha_hora, gravedad, reportado_por, acciones_tomadas, estado, created_at, usuarios(nombre, apellido)';
+
+type IncidentRow = {
+  id: string;
+  nnya_id: string;
+  tipo: CriticalIncident['tipo'];
+  descripcion: string;
+  fecha_hora: string;
+  gravedad: CriticalIncident['gravedad'];
+  reportado_por: string | null;
+  acciones_tomadas: string | null;
+  estado: CriticalIncident['estado'];
+  created_at: string;
+  usuarios: { nombre: string; apellido: string } | null;
+};
+
+function toCriticalIncident(row: IncidentRow): CriticalIncident {
+  return {
+    id: row.id,
+    nnya_id: row.nnya_id,
+    tipo: row.tipo,
+    descripcion: row.descripcion,
+    fecha_hora: row.fecha_hora,
+    gravedad: row.gravedad,
+    reportado_por: row.reportado_por,
+    reportado_por_nombre: row.usuarios ? `${row.usuarios.nombre} ${row.usuarios.apellido}` : null,
+    acciones_tomadas: row.acciones_tomadas,
+    estado: row.estado,
+    created_at: row.created_at,
+  };
+}
 
 /**
  * F6 — Crea un incidente por cada NNA seleccionado en el formulario (la
@@ -32,7 +62,7 @@ export function useCreateCriticalIncident() {
         .insert(rows)
         .select(INCIDENT_FIELDS);
       if (error) throw error;
-      return (data ?? []) as CriticalIncident[];
+      return ((data ?? []) as unknown as IncidentRow[]).map(toCriticalIncident);
     },
     onSuccess: (_data, variables) => {
       for (const nnyaId of variables.nnya_ids) {
@@ -43,9 +73,9 @@ export function useCreateCriticalIncident() {
 }
 
 /**
- * F3/F6 — Incidentes de un NNA, más recientes primero. Pensado para que el
- * historial (issue #13) lo consuma directo al armar el timeline con
- * diferenciación visual (CA-50).
+ * F3/F6 — Incidentes de un NNA, más recientes primero. El historial (#13)
+ * los consume directo para armar el timeline con diferenciación visual
+ * (CA-50).
  */
 export function useCriticalIncidents(nnyaId: string | undefined) {
   return useQuery<CriticalIncident[]>({
@@ -58,7 +88,7 @@ export function useCriticalIncidents(nnyaId: string | undefined) {
         .eq('nnya_id', nnyaId!)
         .order('fecha_hora', { ascending: false });
       if (error) throw error;
-      return (data ?? []) as CriticalIncident[];
+      return ((data ?? []) as unknown as IncidentRow[]).map(toCriticalIncident);
     },
   });
 }

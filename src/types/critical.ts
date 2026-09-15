@@ -14,6 +14,7 @@ export type CriticalIncident = {
   fecha_hora: string; // ISO datetime, default now() en la DB
   gravedad: 'leve' | 'media' | 'grave' | 'critico';
   reportado_por: string | null; // usuarios.id
+  reportado_por_nombre: string | null; // nombre + apellido de usuarios, joineado al leer
   acciones_tomadas: string | null;
   estado: 'abierto' | 'en_seguimiento' | 'cerrado';
   created_at: string;
