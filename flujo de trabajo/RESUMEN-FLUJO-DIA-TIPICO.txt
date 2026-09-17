@@ -1,0 +1,521 @@
+╔════════════════════════════════════════════════════════════════════╗
+║                                                                    ║
+║        🔄 DÍA TÍPICO: 4 Analistas + Claude Code                 ║
+║        Implementando Funcionalidad F7                            ║
+║        (Timeline de Comentarios - 6 criterios)                  ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 09:00 - STANDUP INICIAL (15 min)
+
+📍 Lugar: Zoom + Slack
+
+🟦 JORDY (Lead)
+├─ "Buenos días equipo. Hoy: F7 Timeline Comentarios"
+├─ "6 criterios. Divido trabajo:"
+├─ "  - Yo: Frontend + componentes"
+├─ "  - Cami: UI + assets"
+├─ "  - Sofi: APIs + BD"
+├─ "  - Meli: Testing + QA"
+└─ "¿Listos? Comenzamos en 5 min."
+
+🟣 MELI: "✓ Listo"
+🟢 CAMI: "✓ Listo"
+🟡 SOFI: "✓ Listo"
+
+📊 RESULTADO: Equipo alineado, feature entendida
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 09:15 - LECTURA DE DOCUMENTOS (10 min - PARALELO)
+
+📍 Lugar: Cada uno en su máquina
+
+🔵 JORDY (MacBook)
+├─ Terminal Claude Code abierto
+├─ $ cat AGENTS.md | head -50
+├─ $ cat docs/F7-especificaciones.md
+├─ $ cat docs/criterios-aceptacion-F7.md
+└─ $ cat docs/wireframes-F7.md
+
+🟣 MELI (MacBook)
+├─ Terminal Claude Code abierto
+├─ $ cat AGENTS.md (testing section)
+├─ $ cat skills/testing.md
+├─ $ cat criterios-aceptacion-F7.md
+└─ [Lee testing strategy]
+
+🟢 CAMI (MacBook Air)
+├─ Terminal Claude Code abierto
+├─ $ cat skills/design.md
+├─ $ cat docs/wireframes-F7.md
+├─ $ cat src/theme/design-tokens.json
+└─ [Abre Figma]
+
+🟡 SOFI (Windows WSL2)
+├─ Terminal Claude Code abierto
+├─ $ cat skills/database.md
+├─ $ cat docs/F7-modelo-datos.md
+├─ $ ls -la db/
+└─ [Revisa tabla comentarios estructura]
+
+📊 RESULTADO: 4 personas entienden qué hacer
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 09:30 - GENERAR PLANES (15 min - PARALELO)
+
+📍 Lugar: Cada uno en Claude Code terminal
+
+🔵 JORDY → Claude Code
+┌──────────────────────────────────────────────┐
+│ PROYECTO: Argüello Infancias Mobile          │
+│ FEATURE: F7 - Timeline de Comentarios        │
+│ TAREA: Crear plan frontend                   │
+│                                              │
+│ LEE: AGENTS.md + skills/design.md            │
+│      + F7-especificaciones.md                │
+│      + criterios-aceptacion-F7.md            │
+│                                              │
+│ CREA: prompts/F7-frontend-plan.md            │
+│                                              │
+│ INCLUIR:                                     │
+│ - Componentes a crear                        │
+│ - Hooks necesarios                           │
+│ - Integración APIs                           │
+│ - Design tokens                              │
+│ - Validación TypeScript                      │
+│                                              │
+│ ESPERA: ✓ Aprobación                        │
+└──────────────────────────────────────────────┘
+
+🟣 MELI → Claude Code
+┌──────────────────────────────────────────────┐
+│ PROYECTO: Argüello Infancias Mobile          │
+│ FEATURE: F7 - Timeline de Comentarios        │
+│ TAREA: Crear plan testing                    │
+│                                              │
+│ LEE: AGENTS.md (testing) + skills/testing.md │
+│      + criterios-aceptacion-F7.md            │
+│                                              │
+│ CREA: prompts/F7-testing-plan.md             │
+│                                              │
+│ INCLUIR:                                     │
+│ - Test cases por criterio (CA-1 a CA-6)      │
+│ - Mocks de data                              │
+│ - Edge cases                                 │
+│ - Performance expectations                   │
+│                                              │
+│ ESPERA: ✓ Aprobación                        │
+└──────────────────────────────────────────────┘
+
+🟢 CAMI → Claude Code
+┌──────────────────────────────────────────────┐
+│ PROYECTO: Argüello Infancias Mobile          │
+│ FEATURE: F7 - Timeline de Comentarios        │
+│ TAREA: Crear plan design                     │
+│                                              │
+│ LEE: skills/design.md + wireframes-F7.md     │
+│      + design-tokens.json                    │
+│                                              │
+│ CREA: prompts/F7-design-plan.md              │
+│                                              │
+│ INCLUIR:                                     │
+│ - Componentes UI                             │
+│ - Design tokens (colores, tipografía)        │
+│ - Estados visuales                           │
+│ - Responsive design                          │
+│                                              │
+│ ESPERA: ✓ Aprobación                        │
+└──────────────────────────────────────────────┘
+
+🟡 SOFI → Claude Code
+┌──────────────────────────────────────────────┐
+│ PROYECTO: Argüello Infancias Mobile          │
+│ FEATURE: F7 - Timeline de Comentarios        │
+│ TAREA: Crear plan backend                    │
+│                                              │
+│ LEE: skills/database.md + F7-modelo-datos.md │
+│      + MODELO-DATOS.md (existente)           │
+│                                              │
+│ CREA: prompts/F7-backend-plan.md             │
+│                                              │
+│ INCLUIR:                                     │
+│ - DDL (tabla comentarios)                    │
+│ - Índices + constraints                      │
+│ - RLS policies                               │
+│ - APIs (GET, POST, PUT, DELETE)              │
+│ - Validation (zod)                           │
+│                                              │
+│ ESPERA: ✓ Aprobación                        │
+└──────────────────────────────────────────────┘
+
+⏳ Claude Code ejecuta en paralelo
+   (generando los 4 planes simultáneamente)
+
+📊 RESULTADO: 4 planes generados automáticamente
+             Esperando aprobación de cada persona
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 09:45 - REVISIÓN DE PLANES (15 min - INDIVIDUAL)
+
+📍 Lugar: Cada uno revisa en Claude Code
+
+🔵 JORDY revisa plan frontend
+├─ Lee: prompts/F7-frontend-plan.md
+├─ Chequea:
+│  ├─ ¿Componentes bien divididos? ✓
+│  ├─ ¿Hooks claros? ✓
+│  ├─ ¿APIs correctas? ✓
+│  ├─ ¿Design tokens aplicados? ✓
+│  └─ ¿TypeScript tipado? ✓
+└─ Aprobación: ✅ "✓ Aprobado"
+
+🟣 MELI revisa plan testing
+├─ Lee: prompts/F7-testing-plan.md
+├─ Chequea:
+│  ├─ ¿6 test cases (CA-1 a CA-6)? ✓
+│  ├─ ¿Edge cases? ✓
+│  ├─ ¿Mocks de data? ✓
+│  └─ ¿Performance OK? ✓
+└─ Aprobación: ✅ "✓ Aprobado"
+
+🟢 CAMI revisa plan design
+├─ Lee: prompts/F7-design-plan.md
+├─ Chequea:
+│  ├─ ¿Componentes visuales claros? ✓
+│  ├─ ¿Design tokens? ✓
+│  ├─ ¿Estados visuales? ✓
+│  └─ ¿Responsive? ✓
+└─ Aprobación: ✅ "✓ Aprobado"
+
+🟡 SOFI revisa plan backend
+├─ Lee: prompts/F7-backend-plan.md
+├─ Chequea:
+│  ├─ ¿DDL correcto? ✓
+│  ├─ ¿RLS policies? ✓
+│  ├─ ¿APIs completas? ✓
+│  └─ ¿Validación? ✓
+└─ Aprobación: ✅ "✓ Aprobado"
+
+📊 RESULTADO: Todos los planes aprobados
+             Listo para implementación
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 10:00 - IMPLEMENTACIÓN PARALELA (120 min - PARALELO)
+
+📍 Lugar: Cada uno en su código, Claude Code como copiloto
+
+🔵 JORDY (Frontend)
+├─ Claude Code escribe en src/components/
+├─ Crea:
+│  ├─ src/components/cards/CommentCard.tsx
+│  ├─ src/components/forms/CommentForm.tsx
+│  ├─ src/components/states/[Empty/Loading/Error].tsx
+│  └─ src/hooks/features/useComments.ts
+├─ Tiempo: 60 min
+├─ Resultado: ✅ 4 archivos, 0 errors
+└─ npm run typecheck: PASS ✓
+
+🟣 MELI (Testing)
+├─ Claude Code escribe en test/
+├─ Crea:
+│  ├─ test/features/comments.test.ts
+│  ├─ test/e2e/comments.e2e.ts
+│  └─ test/__mocks__/comments.mock.ts
+├─ Tiempo: 45 min
+├─ Resultado: ✅ 3 archivos, 18 tests escritos
+└─ npm run test: PASS ✓
+
+🟢 CAMI (Design)
+├─ Crea en Figma:
+│  ├─ CommentCard component
+│  ├─ CommentForm component
+│  └─ Timeline visual
+├─ Exporta assets:
+│  ├─ design/F7/comment-icons.svg
+│  └─ design/F7/design-spec.json
+├─ Tiempo: 60 min
+└─ Resultado: ✅ Figma completado, assets exportados
+
+🟡 SOFI (Backend)
+├─ Claude Code escribe en src/api/
+├─ Crea:
+│  ├─ db/migrations/002-create-comments.sql
+│  ├─ src/api/routes/comments.ts
+│  ├─ src/api/validation/comments.schema.ts
+│  └─ src/lib/rls-policies/comments.ts
+├─ Tiempo: 90 min
+├─ Resultado: ✅ 4 archivos, APIs + BD
+└─ npm run typecheck: PASS ✓
+
+⏳ Mientras tanto:
+   - JORDY: Si termina antes, comienza integración
+   - MELI: Si termina antes, comienza chequeos
+   - CAMI: Si termina, pulsa Figma
+   - SOFI: Si termina, corre DB migration
+
+📊 RESULTADO: 4 personas TRABAJAN EN PARALELO
+             NO se bloquean unas a otras
+             Cada una avanza independiente
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 11:30 - CHEQUEOS LOCALES (30 min - PARALELO)
+
+📍 Lugar: Cada uno en su código
+
+🔵 JORDY
+├─ npm run build           → ✅ PASS
+├─ npm run lint            → ✅ 0 errors
+├─ npm run typecheck       → ✅ 0 errors
+└─ npm run test:components → ✅ 4/4 PASS
+
+🟣 MELI
+├─ npm run test            → ✅ 18/18 PASS
+├─ npm run test:coverage   → ✅ 95% coverage
+└─ npm run test:e2e        → ✅ Waiting for integration
+
+🟢 CAMI
+├─ Figma verification      → ✅ OK
+├─ Design tokens applied   → ✅ OK
+├─ Responsive preview      → ✅ OK
+└─ Slack: "UI ready"
+
+🟡 SOFI
+├─ npm run typecheck       → ✅ 0 errors
+├─ npm run test:api        → ✅ 4/4 PASS
+├─ npm run db:validate     → ✅ Schema OK
+└─ Slack: "DB ready"
+
+📊 RESULTADO: Todos los chequeos locales PASAN
+             Código listo para integración
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 12:00 - INTEGRACIÓN (30 min)
+
+📍 Lugar: Terminal + Git
+
+🟦 JORDY coordina:
+
+$ git status
+# Changes: 12 files
+
+$ git add .
+$ git commit -m "feat(F7): Timeline comentarios - [Equipo]"
+
+# Todos mergean:
+$ git merge feature/F7-timeline-comments --no-ff
+
+# Sofi ejecuta migration:
+$ npm run db:migrate
+  ✅ 002-create-comments.sql ejecutada
+  ✅ Tabla comentarios creada
+  ✅ Índices creados
+  ✅ RLS policies aplicadas
+
+# Jordy conecta APIs:
+$ # Actualiza useComments.ts → import APIs reales
+
+# Meli corre integration tests:
+$ npm run test:integration
+  ✅ 6/6 integration tests PASS
+
+📊 RESULTADO: Todos integrados en main
+             Sin conflictos
+             BD actualizada
+             APIs conectadas
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 12:30 - VERIFICACIÓN FINAL (30 min)
+
+📍 Lugar: GitHub + Terminal
+
+🔵 JORDY abre PR:
+# feature/F7-timeline-comments → main
+
+🟣 MELI revisa:
+$ npm run test
+  ✅ 180/180 tests PASS (incluye nuevos 18)
+
+$ npm run build
+  ✅ Build successful
+
+Comentario: "✓ Aprobado (QA)"
+
+🟢 CAMI revisa:
+$ # En Figma
+  ✅ Componentes aplicados
+  ✅ Design tokens OK
+  ✅ Responsive OK
+
+Comentario: "✓ Aprobado (UI)"
+
+🟡 SOFI revisa:
+$ npm run test:api
+  ✅ 4/4 API tests PASS
+
+$ # Revisa RLS policies
+  ✅ Seguridad OK
+
+Comentario: "✓ Aprobado (Backend)"
+
+🟦 JORDY mergea:
+$ git merge --ff-only origin/main
+$ git push origin main
+
+✅ MERGE COMPLETADO
+
+Slack announcement:
+"🚀 F7 Timeline Comentarios MERGEADA A MAIN
+ Criterios: 6/6 ✓
+ Bugs: 0 ✓
+ Tiempo: 3.5 horas ✓
+ Status: PRODUCTION-READY ✅"
+
+📊 RESULTADO: Feature completada y deployada
+             Cero bugs
+             Código revieweado por 4 personas
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 13:00 - CIERRE Y SIGUIENTE FEATURE
+
+📍 Lugar: Slack + Retrospectiva rápida (5 min)
+
+📊 RESUMEN DEL DÍA:
+
+FEATURE:        F7 Timeline Comentarios
+CRITERIOS:      6/6 ✓ (100%)
+BUGS CRÍTICOS:  0 ✓
+TESTS:          18/18 PASS
+PERFORMANCE:    < 200ms ✓
+DOCUMENTACIÓN:  100% ✓
+TIEMPO TOTAL:   3.5 horas ✓
+STATUS:         PRODUCTION-READY ✅
+
+COMPARATIVA:
+❌ Forma tradicional: 8-10 horas (con debugging)
+✅ Con Vibe + Claude Code: 3.5 horas (cero bugs)
+
+MEJORA: 3x más rápido
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 TABLA COMPARATIVA: HORA POR HORA
+
+┌────────┬──────────┬──────────┬──────────┬──────────┐
+│ HORA   │ JORDY    │ MELI     │ CAMI     │ SOFI     │
+├────────┼──────────┼──────────┼──────────┼──────────┤
+│ 09:00  │ Standup  │ Standup  │ Standup  │ Standup  │
+│ 09:15  │ Lee docs │ Lee docs │ Lee docs │ Lee docs │
+│ 09:30  │ Prompt   │ Prompt   │ Prompt   │ Prompt   │
+│        │ Claude   │ Claude   │ Claude   │ Claude   │
+│ 09:45  │ Revisa   │ Revisa   │ Revisa   │ Revisa   │
+│        │ Plan     │ Plan     │ Plan     │ Plan     │
+│ 10:00  │ Código   │ Tests    │ Figma    │ APIs+DB  │
+│ 10:30  │ Código   │ Tests    │ Figma    │ APIs+DB  │
+│ 11:00  │ Código   │ Tests    │ Assets   │ APIs     │
+│ 11:30  │ Check    │ Check    │ Check    │ Check    │
+│ 12:00  │ Merge    │ Tests    │ Figma    │ DB migrá │
+│ 12:30  │ Integra  │ Review   │ Review   │ Review   │
+│ 13:00  │ Cierre   │ Cierre   │ Cierre   │ Cierre   │
+└────────┴──────────┴──────────┴──────────┴──────────┘
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 CLAVES DEL ÉXITO
+
+✅ Documentación clara (AGENTS.md + skills/ + docs/)
+✅ Roles definidos (Jordy, Meli, Cami, Sofi)
+✅ Paralelismo (4 personas, tareas no bloqueantes)
+✅ Planes por Claude Code (evita fallos de comunicación)
+✅ Testing ANTES del código (Meli crea tests primero)
+✅ Chequeos automáticos (build, lint, typecheck, test)
+✅ Comunicación clara (Slack estruturado)
+✅ No esperar (si alguien tarda, mockea y sigue)
+✅ PR review por 4 personas (calidad máxima)
+✅ Merge solo a main (historial limpio)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 TIPS PRO
+
+1. AGENTS.md es SAGRADO
+   - Nunca lo modifiques durante desarrollo
+   - Es la fuente de verdad para Claude Code
+
+2. Skills/ es DOCUMENTO VIVO
+   - Cami actualiza skills/design.md
+   - Sofi actualiza skills/database.md
+   - Meli actualiza skills/testing.md
+   - Pero NO durante implementación (después)
+
+3. Prompts de Claude Code = ESPECÍFICOS
+   ❌ "Implementa comentarios"
+   ✅ "Lee AGENTS.md + docs/... + crea plan en prompts/F7-...-plan.md"
+
+4. Cada persona = Proyecto local + Claude Code
+   - Nunca trabajen en repositorio remoto directamente
+   - Siempre: local → clone → commit → push → PR
+
+5. Merge conflicts = Culpa de mala coordinación
+   - Si pasa: quien llegó primero merge
+   - Quien llegó después: rebase + resuelve
+
+6. Testing = Política de la casa
+   - Meli crea tests primero (plan testing)
+   - Devs implementan código
+   - Meli verifica tests pasen
+
+7. Deploy = Viernes (nunca martes-jueves)
+   - Merge a main = Automáticamente en staging
+   - Deploy a prod = Manual (Jordy autoriza)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📈 VELOCITY ESPERADA
+
+Semana 1: 2 features / semana (aprendiendo)
+Semana 2: 3 features / semana (fluyendo)
+Semana 3+: 3-5 features / semana (máxima velocidad)
+
+Con 51 criterios MVP:
+→ 8-10 features por semana = MVP en 5-6 semanas
+→ Después: Features adicionales indefinidamente
+
+VERSUS equipo tradicional:
+→ MVP en 12-16 semanas (con bugs)
+→ Después: Mantenimiento y hotfixes
+
+
+═════════════════════════════════════════════════════════════════════
+
+           🚀 ESTE ES TU FLUJO DE ORO
+
+      4 Analistas + Vibe Engineering + Claude Code
+         = 3.5 horas por feature completa
+            = 0 bugs críticos
+               = Production-ready siempre
+
+═════════════════════════════════════════════════════════════════════
+
