@@ -11,11 +11,11 @@ Cada criterio se identifica como **CA-XX** (Criterio de Aceptación - número).
 # F1 — Consultar información de los residentes
 
 ## CA-01
-**DADO** un usuario autenticado con rol Educador  
+**DADO** un usuario autenticado con rol Admin o Equipo Técnico  
 **CUANDO** accede a la sección Residentes  
 **ENTONCES** el sistema muestra el listado de NNA que tiene autorización para consultar
 
-**Verificación:** El listado no está vacío (si hay residentes asignados)
+**Verificación:** El listado no está vacío (si hay residentes cargados)
 
 ---
 
@@ -372,9 +372,9 @@ Cada criterio se identifica como **CA-XX** (Criterio de Aceptación - número).
 ## CA-40
 **DADO** que un usuario consulta "Mi turno"  
 **CUANDO** accede a la información  
-**ENTONCES** solo ve información de sus residentes asignados y de su turno
+**ENTONCES** ve las novedades y actividades recientes de los residentes y el horario del turno
 
-**Verificación:** No aparece información de otros educadores o residentes no asignados
+**Verificación:** La información corresponde a las tablas `novedades` y `actividades`; el horario del turno es dato de ejemplo hasta que `turnos_personal` tenga datos
 
 ---
 

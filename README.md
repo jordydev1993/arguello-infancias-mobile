@@ -1,57 +1,50 @@
 # Argüello Infancias Mobile
 
-Aplicación móvil para el **acompañamiento diario de NNA** en residencias bajo protección
-judicial. Es el complemento móvil del sistema web institucional "Argüello Infancias" y está pensada
-para **educadores y operadores convivenciales** durante el turno.
+Aplicación móvil para el **acompañamiento diario de NNyA** en la residencia bajo protección
+judicial. Es el complemento móvil del sistema web "Argüello Infancias": **comparte con él la base
+de datos (Supabase), las cuentas y los roles** (`Admin` y `Equipo Tecnico`).
 
 > Trabajo Final / Tesis — Aplicación Móvil mediante Aprendizaje Basado en Proyectos (ABP).
 
-## Estado actual: scaffold + F1
-
-Este repositorio contiene el **andamiaje del MVP** con la **Feature F1 (consultar residentes)**
-navegable sobre **datos mock**. Las Features F2–F6 tienen su lugar en la estructura (tipos,
-schemas, navegación) pero todavía no están implementadas.
+## Estado actual
 
 | Feature | Estado |
 |---|---|
-| F1 — Consultar residentes | ✅ navegable (mock) |
-| F2 — Registrar novedades | ⬜ pendiente (tipos + Zod listos) |
-| F3 — Consultar historial | ⬜ pendiente (vista de sólo lectura ya visible) |
-| F4 — Registrar actividades | ⬜ pendiente (tipos + Zod listos) |
-| F5 — Consultar turno | 🟡 vista de resumen con mock |
-| F6 — Situación crítica | 🟡 pantalla de advertencia (WF-13); formulario pendiente |
+| F1 — Consultar residentes | Conectada a Supabase (`nnya`, `nnya_tutores`) |
+| F2 — Registrar novedades | Conectada a Supabase (`novedades`) |
+| F3 — Consultar historial | Conectada a Supabase (`novedades`, `incidentes`, `actividades`) |
+| F4 — Registrar actividades | Conectada a Supabase (`actividades`) |
+| F5 — Consultar turno | Parcial: novedades y actividades reales; el **horario del turno y las notas del turno anterior son datos de ejemplo** (`src/data/turno.ts`, `turnos_personal` está vacía) |
+| F6 — Situación crítica | Conectada a Supabase (`incidentes`); requiere que el NNyA tenga un legajo activo |
+
+Pendiente: MFA, rate limiting, timeout de sesión, tests automatizados. Detalle en `AGENTS.md`.
 
 ## Stack
 
-- **Expo SDK 54** + React Native 0.81 + TypeScript (strict)
+- **Expo ~57** + React Native 0.86 + TypeScript (strict)
 - **Expo Router** (file-based, typed routes)
-- **NativeWind v4** (Tailwind CSS) + tipografía **Poppins**
-- **Zustand** (estado global) + **React Query** (data fetching)
-- **AsyncStorage** (cache) / **expo-secure-store** (tokens, a futuro)
-- **Zod** (validación)
-- **Supabase** (`@supabase/supabase-js`) — configurado pero aún **sin usar** (mock data)
+- **NativeWind 4** (Tailwind CSS 3.4) + tipografía **Poppins**
+- **Zustand** (estado de cliente) + **TanStack Query 5** (datos del servidor)
+- **Zod 4** (validación) · **expo-secure-store** (sesión) · **AsyncStorage** (cache no sensible)
+- **Supabase** (`@supabase/supabase-js`): Auth + PostgreSQL con RLS. **No hay backend propio.**
 
 ## Cómo correr
 
 ```bash
 npm install
-npx expo start
+cp .env.example .env    # completar EXPO_PUBLIC_SUPABASE_URL y EXPO_PUBLIC_SUPABASE_ANON_KEY
+npm start               # Expo; abrir en Expo Go, o w (web) / a (Android) / i (iOS)
 ```
 
-Abrí la app en **Expo Go (SDK 54)** escaneando el QR, o presioná `w` (web) / `a` (Android) / `i` (iOS).
-
-### Credenciales de demostración
-
-```
-usuario@test.com
-password123
-```
+Se necesita una **cuenta real** con rol `Admin` o `Equipo Tecnico` (no hay usuario de prueba fijo).
+Sin las variables de Supabase el login muestra "Falta configurar Supabase". Usar solo la **anon key**,
+nunca la `service_role`.
 
 ### Verificaciones
 
 ```bash
-npx tsc --noEmit     # tipos
-npx expo lint        # lint
+npm run typecheck    # tsc --noEmit
+npm run lint         # expo lint
 npx expo-doctor      # salud del proyecto
 ```
 
@@ -60,35 +53,33 @@ npx expo-doctor      # salud del proyecto
 ```
 src/
   app/                 # rutas (Expo Router)
-    (auth)/login.tsx   # WF-01
+    (auth)/login.tsx
     (tabs)/            # Inicio · Residentes · Mi turno · Crítica · Perfil
-    residentes/[id]    # WF-04 detalle del residente
-  components/          # UI reutilizable (botones, cards, estados)
-  hooks/               # useResidents, useObservations, useActivities, useShiftInfo, useAuth
-  lib/                 # validation (Zod), storage, supabase (stub), query-client
+    residentes/[id]    # detalle del residente
+    nueva-novedad, nueva-actividad, situacion-critica, historial-detalle
+  components/          # UI reutilizable
+  hooks/               # un hook por operación: useResidents, useObservations, useActivities,
+                       # useCriticalIncidents, useShiftInfo, useAuth
+  lib/                 # supabase, storage (SecureStore/AsyncStorage), validation (Zod), query-client
   store/               # Zustand: auth, resident, ui
   types/               # modelos de las 6 Features
-  data/                # datos mock (residentes, novedades, actividades, turno, usuarios)
+  data/                # datos de ejemplo que aún quedan (turno, usuarios, novedades)
   utils/               # constants (enums), formatters (fechas, edad)
 design-tokens.json     # paleta + tipografía (consumido por tailwind.config.js)
-docs/                  # documentación prescriptiva (features, criterios, wireframes, flujos)
+skills/                # design, testing (criterios de aceptación), database (modelo que consume mobile)
+docs/                  # documentación de especificación (ver docs/00-INDICE.md)
 ```
-
-## Conectar Supabase (paso siguiente)
-
-1. `cp .env.example .env` y completá `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
-2. En cada `src/hooks/use*.ts`, reemplazá el `queryFn` mock por la llamada real
-   (`getSupabase().from(...)` o el endpoint del backend).
-3. En `src/store/authStore.ts`, cambiá `login` por `auth.signInWithPassword`.
 
 ## Documentación
 
-Ver `docs/`: `03-...FEATURES.md` (6 Features), `04-...CRITERIOS-ACEPTACION.md` (51 CA),
-`05-...WIREFRAMES.md` (15 WF), `06-...FLUJOS-NAVEGACION.md`, `DESIGN-SYSTEM-ARGUELLO-MOBILE.md`.
-Metodología de desarrollo en `AGENTS.md`.
+- Reglas y flujo de trabajo: `AGENTS.md` (y `../AGENTS.md` para el contexto general).
+- Modelo de datos: `skills/database.md` y las migraciones de `../arguello-infancias/supabase/migrations/`.
+- Uso por funcionalidad: `USO-APP-MOBILE-POR-FEATURE.md`.
+- Especificaciones históricas (features, wireframes, flujos): `docs/`. Algunas describen el modelo
+  anterior a la alineación con la web; ver la nota al inicio de `docs/00-INDICE.md`.
 
 ## Compartir con el equipo
 
-EAS Update + build de preview configurados. Ver `docs/EAS-COMPARTIR.md`:
-Android por link (APK), iPhone por Expo Go, y `npm run update:preview "<msg>"` para
-publicar cambios sin recompilar.
+EAS Update + build de preview configurados. Ver `docs/06-operativo/EAS-COMPARTIR.md`:
+Android por link (APK), iPhone por Expo Go, y `npm run update:preview "<msg>"` para publicar
+cambios sin recompilar.

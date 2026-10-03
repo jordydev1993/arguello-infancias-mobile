@@ -1,5 +1,8 @@
 # UNIFICACIÓN AGENTS-MOBILE.md
 
+> **Nota de alineación (2026-09-21):** este documento es anterior a la alineación con el sistema web y puede describir el modelo previo (tablas `residentes`, `perfiles_usuarios`, `situaciones_criticas`, roles educador/coordinador, API Express). Vigente: `mobile/AGENTS.md`, `AGENTS.md` (raíz), `mobile/skills/database.md` y las migraciones de `arguello-infancias/supabase/migrations/`. Se conserva como registro histórico.
+
+
 ## ¿Qué se unificó?
 
 Se combinó el **AGENTS-MOBILE.md que subiste** (orientado al contexto académico/educativo) con el que **creé internamente** (orientado al stack técnico/operativo).

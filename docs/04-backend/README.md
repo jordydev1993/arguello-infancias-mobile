@@ -1,11 +1,12 @@
 # 04 · Backend
 
-➡️ La **validación del modelo de datos** canónica está en **[`/skills/database.md`](../../skills/database.md)**:
-7 tablas, restricciones `CHECK`, índices, RLS por rol y audit log.
+➡️ El modelo de datos que **consume mobile** está en **[`/skills/database.md`](../../skills/database.md)**:
+tablas compartidas con la web, cambios propios de mobile (`novedades`, columnas de `nnya`), RLS y audit log.
+La fuente de verdad del schema son las migraciones de `arguello-infancias/supabase/migrations/`.
 
 Se movió a `skills/` porque `AGENTS.md §[5]` es la referencia del modelo. No hay copia acá.
 
-En [`modelo-de-datos/`](modelo-de-datos/) queda el material de trabajo que originó esa validación:
+En [`modelo-de-datos/`](modelo-de-datos/) queda el material de trabajo del modelado inicial (histórico, previo a la alineación con la web):
 
 | Archivo | Qué es |
 |---|---|
@@ -14,4 +15,4 @@ En [`modelo-de-datos/`](modelo-de-datos/) queda el material de trabajo que origi
 | `RECOMENDACIONES-MODELO-DATOS.md` | Recomendaciones (algunas para v2) |
 | `RESUMEN-SESION-MODELO-DATOS.md` | Resumen de decisiones |
 
-El contrato de APIs vive en `AGENTS.md §[6]`.
+Mobile no tiene API propia: accede directo a Supabase con RLS. El detalle de hooks y tablas vive en `AGENTS.md §[6]`.

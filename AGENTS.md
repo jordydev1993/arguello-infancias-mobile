@@ -1,27 +1,28 @@
 # AGENTS.md — Argüello Infancias Mobile
 
-**El único archivo de reglas que necesitas. Leeré esto antes de cada tarea.**
+**El archivo de reglas de la app móvil. Leerlo antes de cada tarea.**
+
+> Alineado con `../AGENTS.md` (raíz), `../arguello-infancias/AGENTS-WEB.md` y el código de este repo (verificado por inspección directa). Ante cualquier contradicción, **el código y las migraciones del repo web son la fuente de verdad**. Lo que no está implementado se marca como *pendiente*.
 
 ---
 
 ## [1] ROL + FLUJO DE TRABAJO
 
-Eres ingeniero principal con 10+ años en arquitectura de apps.
+Actuás como ingeniero principal de este proyecto. **El líder del equipo decide producto, arquitectura y seguridad; vos hacés el trabajo técnico.**
 
-**Para cada funcionalidad que te pida, hazlo así (sin excepción):**
+**Para cada funcionalidad, sin excepción:**
 
-1. **Lee las reglas:** Este archivo (AGENTS.md) + la skill relevante en `skills/` (`design.md`, `testing.md`, `database.md`). Documentación del proyecto: `docs/00-INDICE.md`.
-2. **Inspecciona:** El código actual en `src/`
-3. **Escribe un PLAN:** Guárdalo en `prompts/XX-nombre-plan.md`
-   - Qué archivos modificas/creas
-   - Qué APIs llamas
-   - Qué datos trae la BD
-   - Cómo cumples los criterios
-   - Qué chequeos corres después
-4. **Espera aprobación:** Yo digo "✓ Aprobado" o "✕ Cambiar X"
-5. **Implementa:** Escribe el código del plan
-6. **Chequea:** Corre TODOS los chequeos (typecheck, lint, tests)
-7. **Reporta:** "Pasos exactos para probar esto"
+1. **Leé las reglas:** este archivo + la skill relevante en `skills/` (`design.md`, `testing.md`, `database.md`) + `docs/00-INDICE.md`. Las skills pueden tener contenido previo a la alineación con la web: ante discrepancia, mandan el código y este archivo.
+2. **Inspeccioná** el código actual en `src/`. No asumas: confirmá en el repo.
+3. **Escribí un PLAN** en `prompts/NN-nombre-plan.md`:
+   - Qué archivos modificás o creás
+   - Qué tablas consultás (y con qué política RLS)
+   - Cómo cumplís los criterios de aceptación
+   - Qué chequeos corrés después
+4. **Esperá aprobación** ("✓ Aprobado" / "✕ Cambiar X").
+5. **Implementá** el plan.
+6. **Chequeá** (ver [7]).
+7. **Reportá** los pasos exactos para probarlo.
 
 **No saltees el PLAN. Nunca.**
 
@@ -29,511 +30,230 @@ Eres ingeniero principal con 10+ años en arquitectura de apps.
 
 ## [2] PRODUCTO: DENTRO / FUERA DE ALCANCE
 
-**Qué es:**  
-Sistema móvil para acompañamiento diario de NNA en residencias bajo protección judicial. 6 funcionalidades core, MVP en 2-3 semanas.
+**Qué es:** app móvil de acompañamiento diario de NNyA en la residencia. Es el complemento del sistema web y **comparte con él la base de datos, las cuentas y los roles**.
 
-**Dentro de alcance:**
-- ✅ F1: Consultar información de residentes asignados
-- ✅ F2: Registrar novedades (incidencias diarias)
-- ✅ F3: Consultar historial de seguimiento
-- ✅ F4: Registrar actividades diarias
-- ✅ F5: Consultar turno y tareas de hoy
-- ✅ F6: Reportar situación crítica (emergencias)
+**Funcionalidades core y estado:**
 
-**Fuera de alcance (NO sobreconstruir):**
-- ❌ Comentarios o réplicas en novedades
-- ❌ Multimedia (video, audio) — solo foto estática
-- ❌ Notificaciones push (v2)
-- ❌ Modo offline con sync automático (v2)
-- ❌ Compartir en redes sociales
-- ❌ Gamificación o puntos
-- ❌ Video llamadas (v2)
-- ❌ Generación de reportes PDF/Excel (v2)
+| # | Funcionalidad | Datos | Estado |
+|---|---------------|-------|--------|
+| F1 | Consultar residentes (ficha y tutores) | `nnya`, `nnya_tutores` | Conectada a Supabase |
+| F2 | Registrar novedades | `novedades` | Conectada a Supabase |
+| F3 | Consultar historial de seguimiento | `novedades`, `incidentes` | Conectada a Supabase |
+| F4 | Registrar actividades | `actividades` | Conectada a Supabase |
+| F5 | Mi turno: novedades y actividades recientes | `novedades`, `actividades` | Parcial: el **horario del turno y las notas del turno anterior son datos de demostración** (`src/data/turno.ts`); `turnos_personal` está vacía |
+| F6 | Reportar situación crítica | `incidentes`, `legajos` | Conectada a Supabase. Resuelve el **legajo activo** de cada NNyA (`incidentes.legajo_id` es NOT NULL) y avisa si no lo tiene |
+
+**Fuera de alcance (no sobreconstruir):**
+- Comentarios o réplicas en novedades
+- Multimedia (video, audio); solo foto estática
+- Notificaciones push (v2)
+- Modo offline con sincronización (v2)
+- Redes sociales, gamificación, videollamadas
+- Reportes PDF/Excel (v2)
+- Funcionalidad administrativa: usuarios, roles, auditoría (viven en la web)
 
 ---
 
 ## [3] ARQUITECTURA
 
 ```
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  EXPO / REACT NATIVE (Cliente móvil)           │
-│  - Pantallas (app/(tabs)/, app/(auth)/)        │
-│  - Componentes reutilizables                    │
-│  - Estado Zustand                               │
-│  - Supabase Client (JWT automático)            │
-│                                                 │
-└────────────────────┬────────────────────────────┘
-                     │ HTTP fetch
-                     ↓
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  EXPRESS.JS SERVERLESS (API)                   │
-│  - Routes: POST/GET /api/*                     │
-│  - Valida JWT (Supabase)                       │
-│  - RBAC: educador vs coordinador               │
-│  - Queries preparadas (sin inyección SQL)      │
-│                                                 │
-└────────────────────┬────────────────────────────┘
-                     │ SQL prepared
-                     ↓
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│  SUPABASE POSTGRESQL (Datos)                   │
-│  - 7 tablas (residentes, novedades, ...)       │
-│  - RLS policies por rol                         │
-│  - Audit log centralizado                      │
-│  - Triggers automáticos                        │
-│                                                 │
-└─────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│  EXPO / REACT NATIVE (cliente móvil)             │
+│  - Pantallas en src/app/ ((auth), (tabs), ...)   │
+│  - Estado de cliente: Zustand                    │
+│  - Estado de servidor: TanStack Query            │
+│  - Cliente Supabase (sesión en SecureStore)      │
+└───────────────────────┬──────────────────────────┘
+                        │ supabase-js (HTTPS + JWT)
+                        ▼
+┌──────────────────────────────────────────────────┐
+│  SUPABASE: Auth + PostgreSQL con RLS             │
+│  - Mismo proyecto y misma base que la web        │
+│  - Audit log por triggers                        │
+└──────────────────────────────────────────────────┘
 ```
 
-**Reglas arquitectura:**
-- 🔒 Secretos NUNCA en cliente (Expo)
-- 🔒 Tokens JWT en Expo SecureStore
-- 🔒 Validación de entrada en servidor, no en cliente
-- 🔒 RBAC: RLS policies en BD, no en API
-- 🔒 Audit log: TODOS los cambios en novedades/criticas
+**No hay backend Express ni API REST propia.** La app consulta y escribe directo en Supabase con `supabase-js`; la autorización la garantiza RLS.
+
+**Reglas de arquitectura:**
+- Secretos NUNCA en el cliente. Solo se usan `EXPO_PUBLIC_SUPABASE_URL` y `EXPO_PUBLIC_SUPABASE_ANON_KEY` (la anon key; jamás la `service_role`), que quedan embebidas en el bundle.
+- La sesión (JWT) se persiste en **Expo SecureStore** (`src/lib/supabase.ts`, `src/lib/storage.ts`). `AsyncStorage` (`cache`) es solo para datos NO sensibles: nunca datos de NNyA ni credenciales.
+- La autorización real está en **RLS en la base**; la UI solo oculta.
+- La validación crítica vive en la base (`CHECK`, `UNIQUE`, `NOT NULL`); en el cliente se valida el formato con zod (`src/lib/validation.ts`).
+- Audit log: el trigger `fn_audit_trigger()` registra INSERT/UPDATE/DELETE en las tablas de negocio.
 
 ---
 
 ## [4] STACK TÉCNICO + PROHIBICIONES
 
-**USAR SIEMPRE:**
+**Usar siempre:**
+- `Expo ~57` (managed) + `React Native 0.86` + TypeScript strict
+- `Expo Router` para navegación
+- `NativeWind 4` + `Tailwind CSS 3.4` (no StyleSheet suelto)
+- `Zustand` para estado de cliente (sesión, selección, UI)
+- `TanStack Query 5` para datos del servidor (un hook por operación en `src/hooks/`)
+- `@supabase/supabase-js` para auth + datos
+- `zod 4` para validación de formato
+- Fuente `Poppins` (en `assets/fonts/`)
 
-Frontend Mobile:
-- `Expo 50+` (managed service, no bare workflow)
-- `React Native` con TypeScript (modo strict)
-- `Expo Router` para navegación (no React Navigation)
-- `NativeWind 2.x` + Tailwind CSS 3.x (no StyleSheet)
-- `Zustand` para estado global (no Redux, no Context)
-- `@supabase/supabase-js` para auth + DB
-- `Poppins` font (descargada en assets/)
+**Autenticación:** Supabase Auth con email y contraseña, sesión persistente y `autoRefreshToken`. MFA/TOTP **no está implementado** (pendiente, igual que en la web).
 
-Backend Compartido:
-- `Node.js 20+` runtime
-- `Express.js` (no Next.js, no Fastify)
-- `TypeScript` (modo strict)
-- `Supabase PostgreSQL 15+` (no otra DB)
-- `JWT + TOTP` para auth (Supabase auth)
-- `zod` para validación
-- `winston` para logs
-
-**NO USAR NUNCA:**
-- ❌ Redux (usar Zustand)
-- ❌ Context API (usar Zustand)
-- ❌ Clerk, Firebase Auth (solo Supabase)
-- ❌ Axios (solo fetch)
-- ❌ GraphQL (solo REST)
-- ❌ React Query (estado local → Zustand)
-- ❌ react-hook-form (formularios simples, no lib)
-- ❌ Tailwind UI (usar design tokens propios)
+**No usar nunca:**
+- Redux ni Context API para estado global (usar Zustand)
+- Clerk o Firebase Auth (solo Supabase)
+- Axios (solo `fetch` o `supabase-js`)
+- GraphQL
+- `react-hook-form` (formularios simples sin librería)
+- Tailwind UI (usar los tokens propios de `src/theme/` y `design-tokens.json`)
+- Agregar dependencias sin justificar la necesidad primero
 
 ---
 
 ## [5] MODELO DE DATOS
 
-**7 tablas. Todas son obligatorias para MVP.**
+**La app móvil no tiene tablas propias salvo `novedades`.** Reutiliza el modelo de la web (28 tablas). La fuente de verdad es `../arguello-infancias/supabase/migrations/` y `../arguello-infancias/AGENTS-WEB.md`.
 
-**Lee: `skills/database.md`** para la validación completa: restricciones `CHECK`, índices, RLS por rol y audit log. Material de trabajo del modelado en `docs/04-backend/modelo-de-datos/`.
+### Tablas que consume la app
 
-### Tabla: perfiles_usuarios
+| Tabla | Uso en mobile | Origen |
+|-------|---------------|--------|
+| `nnya` | "Residentes": lista y detalle (F1) | Web. **Mobile reusa `nnya`**; no existe tabla `residentes` |
+| `nnya_tutores` (+ `tutores`) | Tutores del residente (F1) | Web |
+| `novedades` | Registro y consulta de novedades (F2, F3, F5) | **Nueva, de mobile** |
+| `actividades` | Registro y consulta de actividades (F4, F5). Es grupal: `nnya_ids` (array) | Web |
+| `incidentes` | Situación crítica (F6) y timeline (F3) | Web |
+| `usuarios` + `roles` | Resolver usuario y rol al iniciar sesión | Web |
+| `turnos_personal` | Turno (F5). **Vacía**, no se consulta todavía | Web |
+
+### Cambios de mobile sobre el schema compartido
+
+Migración `20260912000035_add_columnas_mobile_nnya.sql` (columnas nuevas de `nnya`):
 
 ```
-id          UUID (PK → auth.users.id) ON DELETE RESTRICT
-nombre      VARCHAR(255) NOT NULL
-rol         VARCHAR(50) CHECK (rol IN ('educador', 'coordinador'))
-created_at  TIMESTAMPTZ DEFAULT NOW()
+foto_url             TEXT NULL
+alertas_importantes  TEXT NULL
+turno_escolar        VARCHAR(50) NULL  CHECK (NULL o 'Mañana','Tarde','Noche','Doble Jornada')
 ```
 
-Regla: Un educador solo ve residentes asignados via residentes_turnos.
+Migración `20260912000036_create_novedades.sql`:
+
+```
+novedades
+  id           UUID PK
+  nnya_id      UUID NOT NULL → nnya(id)
+  usuario_id   UUID NULL → usuarios(id) ON DELETE SET NULL
+  tipo         VARCHAR(50) NOT NULL CHECK IN ('Salud','Educación','Comportamiento',
+               'Alimentación','Visita Familiar','Otro')
+  descripcion  TEXT NOT NULL
+  fecha_hora   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at, updated_at
+Índice: idx_novedades_nnya_fecha (nnya_id, fecha_hora DESC)
+RLS: solo Admin y Equipo Tecnico (get_my_role())
+```
+
+### Reglas del modelo
+
+- **Baja lógica de NNyA:** campo `activo`; nunca se borra físicamente un NNyA.
+- **`audit_log`** (compartido con la web): columnas `tabla`, `operacion` (INSERT/UPDATE/DELETE), `id_registro`, `datos_antes`, `datos_despues`, `auth_uid`, `fecha`. Solo el rol `Admin` puede leerlo; nadie puede editarlo ni borrarlo.
+- Los nombres de tablas y columnas de versiones anteriores de este documento (`perfiles_usuarios`, `residentes`, `turnos_trabajo`, `residentes_turnos`, `actividades_diarias`, `situaciones_criticas`, `residente_id`, `tipo_novedad`, `deleted_at`) **no existen**. No usarlos.
 
 ---
 
-### Tabla: residentes
+## [6] ACCESO A DATOS (reemplaza al antiguo contrato REST)
 
-```
-id                      UUID (PK)
-nombre                  VARCHAR(255) NOT NULL
-foto_url                TEXT NULL (almacenado en Supabase Storage)
-fecha_nacimiento        DATE NOT NULL
-escuela                 VARCHAR(255) NULL
-turno_escolar           VARCHAR(50) CHECK (turno_escolar IN ('Mañana', 'Tarde', 'Noche', 'Doble Jornada'))
-observaciones_autorizadas TEXT NULL
-alertas_importantes     TEXT NULL (ej: alergias, medicación)
-created_at              TIMESTAMPTZ DEFAULT NOW()
-deleted_at              TIMESTAMPTZ NULL (soft delete)
-```
+No hay endpoints propios. Cada operación es un hook en `src/hooks/` que llama a Supabase:
 
-Regla: Nunca eliminar residente físicamente (soft delete via deleted_at).
+| Hook | Tabla(s) | Operación |
+|------|----------|-----------|
+| `useResidents` | `nnya`, `nnya_tutores` | Lectura (lista, detalle, tutores) |
+| `useObservations` | `novedades` | Lectura y alta |
+| `useActivities` | `actividades` | Lectura (filtra por `nnya_ids`) y alta |
+| `useCriticalIncidents` | `incidentes`, `legajos` | Lectura y alta (una fila por NNyA seleccionado, con su legajo activo) |
+| `useShiftInfo` | `novedades`, `actividades` | Lectura. El horario del turno es mock (`src/data/turno.ts`) |
+| `useAuth` / `authStore` | `usuarios`, `roles` | Resolver usuario y rol |
 
----
-
-### Tabla: turnos_trabajo
-
-```
-id          UUID (PK)
-nombre      VARCHAR(100) CHECK (nombre IN ('Mañana', 'Tarde', 'Noche'))
-hora_inicio TIME NOT NULL
-hora_fin    TIME NOT NULL
-created_at  TIMESTAMPTZ DEFAULT NOW()
-```
-
-Regla: Solo 3 turnos. Inmutable después de MVP.
+Reglas:
+- Cada mutación invalida las query keys afectadas (`queryClient.invalidateQueries`).
+- Los campos NOT NULL de la base que la UI no pide se completan en el hook (ej.: `actividades.fecha` y `titulo`).
+- Un hook por operación; no llamar a `getSupabase()` desde las pantallas.
 
 ---
 
-### Tabla: residentes_turnos
-
-```
-residente_id UUID (FK → residentes.id) ON DELETE CASCADE
-turno_id     UUID (FK → turnos_trabajo.id) ON DELETE CASCADE
-PK: (residente_id, turno_id)
-```
-
-Regla: Un residente puede estar en 1+ turnos. Un turno tiene N residentes.
-
----
-
-### Tabla: novedades
-
-```
-id              UUID (PK)
-residente_id    UUID (FK → residentes.id) NOT NULL ON DELETE CASCADE
-usuario_id      UUID (FK → perfiles_usuarios.id) NOT NULL ON DELETE RESTRICT
-tipo_novedad    VARCHAR(100) CHECK (tipo_novedad IN ('Salud', 'Educación', 'Comportamiento', 'Alimentación', 'Visita Familiar', 'Otro'))
-descripcion     TEXT NOT NULL (nunca vacío)
-fecha_hora      TIMESTAMPTZ DEFAULT NOW()
-deleted_at      TIMESTAMPTZ NULL (soft delete)
-created_at      TIMESTAMPTZ DEFAULT NOW()
-```
-
-**Índices:**
-- `idx_novedades_residente_fecha (residente_id, fecha_hora DESC)`
-- `idx_novedades_usuario (usuario_id)`
-
-Regla crítica: Nunca guardar novedad sin descripcion. SEMPRE with timestamp.
-
----
-
-### Tabla: actividades_diarias
-
-```
-id              UUID (PK)
-residente_id    UUID (FK → residentes.id) NOT NULL ON DELETE CASCADE
-tipo_actividad  VARCHAR(100) CHECK (tipo_actividad IN ('Colegio', 'Recreativa', 'Deportiva', 'Taller', 'Turno Médico', 'Otra'))
-descripcion     TEXT NULL
-realizada       BOOLEAN DEFAULT FALSE
-fecha           DATE DEFAULT CURRENT_DATE
-usuario_id      UUID (FK → perfiles_usuarios.id) NULL ON DELETE SET NULL
-deleted_at      TIMESTAMPTZ NULL (soft delete)
-created_at      TIMESTAMPTZ DEFAULT NOW()
-```
-
-**Índices:**
-- `idx_actividades_residente_fecha (residente_id, fecha DESC)`
-
-Regla: Una actividad está pendiente o realizada. Sin estados intermedios.
-
----
-
-### Tabla: situaciones_criticas
-
-```
-id              UUID (PK)
-residente_id    UUID (FK → residentes.id) NOT NULL ON DELETE RESTRICT
-usuario_id      UUID (FK → perfiles_usuarios.id) NOT NULL ON DELETE RESTRICT
-tipo_situacion  VARCHAR(100) CHECK (tipo_situacion IN ('Violencia', 'Crisis Emocional', 'Accidente', 'Fuga', 'Emergencia Sanitaria'))
-descripcion     TEXT NOT NULL
-fecha_hora      TIMESTAMPTZ DEFAULT NOW()
-created_at      TIMESTAMPTZ DEFAULT NOW()
-```
-
-**Índices:**
-- `idx_criticas_residente_fecha (residente_id, fecha_hora DESC)`
-
-Regla crítica: Auditoría obligatoria (nunca borrar). Timestamp automático.
-
----
-
-### Tabla: audit_log
-
-```
-id              UUID (PK)
-tabla_nombre    VARCHAR(100) NOT NULL
-registro_id     UUID NOT NULL
-operacion       VARCHAR(20) CHECK (operacion IN ('CREATE', 'UPDATE', 'DELETE'))
-usuario_id      UUID (FK → perfiles_usuarios.id) ON DELETE RESTRICT
-datos_antes     JSONB NULL
-datos_despues   JSONB NULL
-fecha_hora      TIMESTAMPTZ DEFAULT NOW()
-```
-
-**Índices:**
-- `idx_audit_tabla_fecha (tabla_nombre, fecha_hora DESC)`
-- `idx_audit_usuario (usuario_id)`
-
-Regla: Triggers automáticos en novedades, criticas, actividades, residentes.
-
----
-
-## [6] CONTRATOS DE API
-
-**Base URL:** `https://[supabase-project].functions.supabase.co/api` (serverless)
-
----
-
-### GET /api/residentes
-
-**Input:**
-```json
-{
-  "assigned_to_me": true,      // opcional: true = solo asignados al educador
-  "limit": 50,                  // opcional: default 20
-  "offset": 0                   // opcional: para paginación
-}
-```
-
-**Output (200):**
-```json
-{
-  "residentes": [
-    {
-      "id": "uuid",
-      "nombre": "María García",
-      "edad": 12,                        // calculado de fecha_nacimiento
-      "foto_url": "https://...",
-      "alertas_importantes": "Alérgica a..."
-    }
-  ],
-  "total": 42
-}
-```
-
-**Errors:**
-- `401 Unauthorized` - sin JWT
-- `403 Forbidden` - educador pide residentes no asignados
-
----
-
-### POST /api/novedades
-
-**Input:**
-```json
-{
-  "residente_id": "uuid",
-  "tipo_novedad": "Salud",       // uno de: Salud, Educación, Comportamiento, Alimentación, Visita Familiar, Otro
-  "descripcion": "Se cayó en el patio"
-}
-```
-
-**Output (201):**
-```json
-{
-  "id": "uuid",
-  "fecha_hora": "2026-08-31T14:30:00Z",
-  "usuario_id": "uuid"           // el del JWT
-}
-```
-
-**Errors:**
-- `400 Bad Request` - descripcion vacía
-- `401 Unauthorized` - sin JWT
-- `403 Forbidden` - no tiene permiso registrar para ese residente
-
----
-
-### GET /api/residentes/:id/timeline
-
-**Input:**
-```
-?days=30     // últimos 30 días (default)
-```
-
-**Output (200):**
-```json
-{
-  "residentes_id": "uuid",
-  "timeline": [
-    {
-      "id": "uuid",
-      "tipo": "Salud",
-      "descripcion": "Se cayó",
-      "fecha_hora": "2026-08-31T14:30:00Z",
-      "registrado_por": "Jordy García"
-    }
-  ]
-}
-```
-
----
-
-### POST /api/actividades
-
-**Input:**
-```json
-{
-  "residente_id": "uuid",
-  "tipo_actividad": "Colegio",   // uno de: Colegio, Recreativa, Deportiva, Taller, Turno Médico, Otra
-  "descripcion": "Matemáticas"   // opcional
-}
-```
-
-**Output (201):**
-```json
-{
-  "id": "uuid",
-  "realizada": false,
-  "fecha": "2026-08-31"
-}
-```
-
----
-
-### PATCH /api/actividades/:id
-
-**Input:**
-```json
-{
-  "realizada": true             // marcar como hecha
-}
-```
-
-**Output (200):** La actividad actualizada
-
----
-
-### GET /api/my-shift
-
-**Output (200):**
-```json
-{
-  "turno": {
-    "nombre": "Mañana",
-    "hora_inicio": "06:00",
-    "hora_fin": "14:00"
-  },
-  "residentes_asignados": [...],
-  "novedades_24h": [...],
-  "actividades_pendientes": [...]
-}
-```
-
----
-
-### POST /api/situaciones-criticas
-
-**Input:**
-```json
-{
-  "residente_id": "uuid",
-  "tipo_situacion": "Violencia",  // uno de: Violencia, Crisis Emocional, Accidente, Fuga, Emergencia Sanitaria
-  "descripcion": "Peleó con otro residente"
-}
-```
-
-**Output (201):**
-```json
-{
-  "id": "uuid",
-  "fecha_hora": "2026-08-31T14:30:00Z",
-  "usuario_id": "uuid"
-}
-```
-
-**Importante:** Se registra en audit_log automáticamente.
-
----
-
-## [7] CHEQUEOS OBLIGATORIOS (Después de CADA implementación)
-
-Antes de reportar "listo", corre TODOS estos:
+## [7] CHEQUEOS OBLIGATORIOS (después de CADA implementación)
 
 ```bash
-# Typecheck
-npm run typecheck           # ✓ sin errores
-
-# Linting
-npm run lint                # ✓ sin warnings
-
-# Compilación
-npx expo build              # ✓ sin errores
-
-# En Expo Go:
-expo start
-  ✓ Abre la app
-  ✓ Navego entre tabs
-  ✓ Datos llegan de BD
-  ✓ Guardé algo, lo veo reflejado
-
-# BD:
-SELECT COUNT(*) FROM [tabla];     # ✓ datos insertados
-SELECT * FROM audit_log WHERE tabla_nombre = '[tabla]' ORDER BY fecha_hora DESC LIMIT 5;
-                                  # ✓ auditoría registra cambios
+npm run typecheck     # tsc --noEmit: sin errores
+npm run lint          # expo lint: sin warnings
 ```
 
-**No reportes "listo" hasta que TODO pase.**
+En Expo Go (`npm start`):
+- Abre la app e inicia sesión con un usuario Admin o Equipo Técnico.
+- Navega entre tabs; los datos llegan de la base.
+- Se guarda algo y se ve reflejado.
+
+En la base (SQL editor de Supabase, con rol Admin):
+
+```sql
+SELECT COUNT(*) FROM novedades;
+SELECT * FROM audit_log WHERE tabla = 'novedades' ORDER BY fecha DESC LIMIT 5;
+```
+
+Verifica que la auditoría registró el cambio. **No reportes "listo" hasta que todo pase.** (No hay suite de tests automatizados todavía: los criterios de `skills/testing.md` se verifican a mano.)
 
 ---
 
 ## [8] DISEÑO + COMPONENTES
 
-**Lee: `skills/design.md` para:**
-- Colores (Argüello theme: azul + púrpura)
-- Tipografía Poppins (11px a 32px)
-- Espaciado scale (4px a 48px)
-- Componentes reutilizables (PrimaryButton, ResidentCard, etc)
-- WCAG AA compliance
+Leer `skills/design.md` y `design-tokens.json` para colores, tipografía Poppins, escala de espaciado, componentes reutilizables (`src/components/`) y accesibilidad (WCAG AA).
 
 ---
 
 ## [9] CRITERIOS DE ACEPTACIÓN
 
-**Lee: `skills/testing.md` para:**
-- F1: 7 criterios de aceptación (CA-01 a CA-07)
-- F2: 10 criterios (CA-08 a CA-17)
-- F3: 7 criterios (CA-18 a CA-24)
-- F4: 8 criterios (CA-25 a CA-32)
-- F5: 8 criterios (CA-33 a CA-40)
-- F6: 11 criterios (CA-41 a CA-51)
-
-Cada Feature pasa TODOS sus criterios antes de dar por finalizado.
+Leer `skills/testing.md`. Cada funcionalidad pasa todos sus criterios antes de darse por terminada:
+- F1: CA-01 a CA-07 · F2: CA-08 a CA-17 · F3: CA-18 a CA-24
+- F4: CA-25 a CA-32 · F5: CA-33 a CA-40 · F6: CA-41 a CA-51
 
 ---
 
-## [10] HISTORIAS DE USUARIO
+## [10] REGLAS DE NEGOCIO Y SEGURIDAD
 
-**Las reglas que gobiernan el comportamiento:**
+- **Roles:** solo **Admin** y **Equipo Técnico**. `authStore` resuelve el rol real desde `usuarios`/`roles` y rechaza el login si el usuario está inactivo o su rol no está permitido.
+- **Alcance de datos:** hoy ambos roles ven **todos** los NNyA (RLS por rol, no por asignación). No existe una restricción "solo los residentes asignados"; no asumirla.
+- **Auditoría:** todos los cambios quedan en `audit_log` por trigger. Nunca borrar registros de novedades ni de incidentes.
+- **Timestamps:** `fecha_hora` se completa automáticamente en la base.
+- **Validación:** la base es la fuente de verdad; el cliente valida el formato.
+- **Datos sensibles:** el DNI está en texto plano en la base (decisión documentada en el repo web). No afirmar cifrado. No guardar datos de NNyA en `AsyncStorage`.
+- **Offline:** v1 no lo soporta; se asume conectividad.
+- **Secretos:** solo la anon key en el cliente; el resto, jamás en Expo.
 
-- **RBAC:** Educador solo ve residentes asignados. Coordinador ve todo.
-- **Auditoría:** Todos los cambios en novedades/criticas quedan registrados. Nunca borrar.
-- **Timestamps:** Cada novedad/crítica lleva timestamp automático (cuando la IA lo registró).
-- **Soft deletes:** Residentes/novedades nunca se borran, se marcan como deleted_at.
-- **Validación:** servidor es la fuente de verdad (no confiar en el cliente).
-- **Offline:** v1 no soporta. Siempre hay conectividad.
-- **Seguridad:** Secrets en .env del servidor. Jamás en Expo.
+### Pendiente y deuda conocida
+
+- MFA (TOTP), rate limiting y timeout de sesión por inactividad.
+- Horario de turno y notas del turno anterior con datos reales (depende de poblar `turnos_personal`).
+- Tests automatizados.
+- `skills/*.md` y `docs/` pueden conservar el modelo anterior (tablas `residentes`, Express, roles educador/coordinador); no fueron revisados en esta alineación.
 
 ---
 
-## RESUMEN ULTRA-CORTO (Pegalo en tu prompt diario)
+## RESUMEN ULTRA-CORTO (para el prompt diario)
 
 ```
-Eres ingeniero principal. Para cada Feature:
+Sos ingeniero principal. Para cada funcionalidad:
 
-1. Lee AGENTS.md (este archivo)
-2. Lee skills/ relevantes
-3. Escribe PLAN en prompts/XX-nombre-plan.md
-4. Espera aprobación (yo digo ✓)
-5. Implementa
-6. Corre chequeos (typecheck, lint, expo start)
-7. Reporta: "Pasos exactos para probar"
+1. Leé AGENTS.md (este archivo) y ../AGENTS.md
+2. Leé las skills relevantes e inspeccioná src/
+3. Escribí el PLAN en prompts/NN-nombre-plan.md
+4. Esperá aprobación (✓)
+5. Implementá
+6. Corré typecheck y lint
+7. Reportá los pasos exactos para probar
 
+Sin backend propio: supabase-js + RLS. Dos roles: Admin y Equipo Tecnico.
 No saltees el PLAN. Nunca.
 ```
 
 ---
 
-**Fecha:** 31 de Agosto 2026  
-**Versión:** 1.0  
-**Alineado con:** Vibe Engineering + SDD
-
+**Versión:** 2.0 (alineada con la web y el código)
+**Metodología:** Vibe Engineering + SDD

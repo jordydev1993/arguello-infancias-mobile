@@ -1,524 +1,104 @@
-# ✅ VALIDACIÓN — Modelo de Datos Argüello Infancias Mobile
+# Modelo de datos que consume Argüello Infancias Mobile
 
-**Archivo:** `modelo-datos-arguello-movil.docx`
+> Alineado con `../AGENTS.md` [5], `../../AGENTS.md` y las migraciones de `../../arguello-infancias/supabase/migrations/` (fuente de verdad). Verificado contra el código de `src/hooks/`.
+> El modelo anterior de este archivo (7 tablas propias: `perfiles_usuarios`, `residentes`, `turnos_trabajo`, `residentes_turnos`, `actividades_diarias`, `situaciones_criticas`, `audit_log` propio) **no existe** y no debe usarse.
 
----
+## Principio
 
-## 📊 RESUMEN EJECUTIVO
+La app móvil **comparte la base de datos con la web** (Supabase/PostgreSQL, 28 tablas). No tiene tablas propias salvo `novedades`. La autorización la garantiza **RLS** (rol vía `get_my_role()`); no hay backend intermedio.
 
-El modelo de datos presentado es **100% VÁLIDO** y **coherente** con la documentación de Features generada.
+## Tablas que consume mobile
 
-```
-✅ 7 tablas creadas (correctas)
-✅ Mapeo completo con 6 Features (F1-F6)
-✅ Criterios de aceptación cubiertos (51/51)
-✅ Script DDL incluido (PostgreSQL/Supabase)
-✅ Índices de rendimiento definidos
-✅ Restricciones y validaciones presentes
-✅ Documentación detallada
-```
+| Feature | Tablas | Hook |
+|---|---|---|
+| F1 Residentes | `nnya`, `nnya_tutores` (+ `tutores`) | `useResidents` |
+| F2 Registrar novedad | `novedades` | `useObservations` |
+| F3 Historial | `novedades`, `incidentes`, `actividades` | `useObservations`, `useCriticalIncidents`, `useActivities` |
+| F4 Registrar actividad | `actividades` | `useActivities` |
+| F5 Mi turno | `novedades`, `actividades` (+ horario mock; `turnos_personal` vacía) | `useShiftInfo` |
+| F6 Situación crítica | `incidentes`, `legajos` | `useCriticalIncidents` |
+| Sesión | `usuarios`, `roles` | `authStore` |
 
----
+## Estructura de cada tabla (resumen)
 
-## 📋 TABLAS DEFINIDAS (7 tablas)
-
-### 1. **perfiles_usuarios**
-```sql
-├─ id (UUID, PK) → auth.users(id)
-├─ nombre (VARCHAR 255, NOT NULL)
-├─ rol (VARCHAR 50, CHECK: educador/coordinador)
-└─ created_at (TIMESTAMPTZ, DEFAULT NOW())
-```
-
-**Propósito:** Extender autenticación Supabase con datos de perfil  
-**RBAC:** Educador vs Coordinador  
-**Validación:** ✅ Correcta
-
----
-
-### 2. **residentes**
-```sql
-├─ id (UUID, PK)
-├─ nombre (VARCHAR 255, NOT NULL)
-├─ foto_url (TEXT, NULL)
-├─ fecha_nacimiento (DATE, NOT NULL)
-├─ escuela (VARCHAR 255, NULL)
-├─ turno_escolar (VARCHAR 50, CHECK: Mañana/Tarde/Noche/Doble Jornada)
-├─ observaciones_autorizadas (TEXT, NULL)
-├─ alertas_importantes (TEXT, NULL)
-└─ created_at (TIMESTAMPTZ, DEFAULT NOW())
-```
-
-**Propósito:** Datos maestros de NNA  
-**Mapeo F1:** ✅ Consultar información de residentes  
-**Cálculo edad:** Dinámico via `age(fecha_nacimiento)` (no campo estático)  
-**Validación:** ✅ Correcta
-
-**Notas:**
-- Foto en Storage protegido (buena práctica)
-- Alertas_importantes para emergencias (ej. alergias)
-- Observaciones por RBAC (restricciones)
-
----
-
-### 3. **turnos_trabajo**
-```sql
-├─ id (UUID, PK)
-├─ nombre (VARCHAR 100, CHECK: Mañana/Tarde/Noche)
-├─ hora_inicio (TIME, NOT NULL)
-└─ hora_fin (TIME, NOT NULL)
-```
-
-**Propósito:** Definir turnos de asistencia (3 turnos base)  
-**Mapeo F5:** ✅ Consultar turno  
-**Validación:** ✅ Correcta
-
----
-
-### 4. **residentes_turnos**
-```sql
-├─ residente_id (UUID, FK → residentes.id)
-├─ turno_id (UUID, FK → turnos_trabajo.id)
-└─ PK Compuesta: (residente_id, turno_id)
-```
-
-**Propósito:** Relación muchos a muchos (NNA ↔ Turnos)  
-**Mapeo F1 + F5:** ✅ Asignación de residentes a turnos  
-**Validación:** ✅ Correcta
-
----
-
-### 5. **novedades**
-```sql
-├─ id (UUID, PK)
-├─ residente_id (UUID, FK → residentes.id, NOT NULL)
-├─ usuario_id (UUID, FK → perfiles_usuarios.id, NOT NULL)
-├─ tipo_novedad (VARCHAR 100, CHECK: Salud/Educación/Comportamiento/Alimentación/Visita Familiar/Otro)
-├─ descripcion (TEXT, NOT NULL)
-├─ fecha_hora (TIMESTAMPTZ, DEFAULT NOW())
-└─ created_at (TIMESTAMPTZ, DEFAULT NOW())
-```
-
-**Propósito:** Registrar incidencias ordinarias  
-**Mapeo F2 + F3:** ✅ Registrar y consultar novedades  
-**Auditoría:** ✅ fecha_hora con trazabilidad  
-**Validación:** ✅ Correcta
-
-**Notas:**
-- ON DELETE RESTRICT para usuario_id (protege auditoría)
-- ON DELETE CASCADE para residente_id (limpieza si NNA se elimina)
-- 6 categorías de tipos (válido vs criterios)
-
----
-
-### 6. **actividades_diarias**
-```sql
-├─ id (UUID, PK)
-├─ residente_id (UUID, FK → residentes.id, NOT NULL)
-├─ tipo_actividad (VARCHAR 100, CHECK: Colegio/Recreativa/Deportiva/Taller/Turno Médico/Otra)
-├─ descripcion (TEXT, NULL)
-├─ realizada (BOOLEAN, DEFAULT FALSE)
-├─ fecha (DATE, DEFAULT CURRENT_DATE)
-├─ usuario_id (UUID, FK → perfiles_usuarios.id)
-└─ created_at (TIMESTAMPTZ, DEFAULT NOW())
-```
-
-**Propósito:** Control de actividades diarias  
-**Mapeo F4:** ✅ Registrar actividades  
-**Estado tracking:** ✅ Campo `realizada` (booleano)  
-**Validación:** ✅ Correcta
-
-**Notas:**
-- 6 tipos de actividades (válido)
-- ON DELETE SET NULL para usuario_id (permite eliminar educador sin perder actividad)
-- Fecha separada de hora (bueno para reportes diarios)
-
----
-
-### 7. **situaciones_criticas**
-```sql
-├─ id (UUID, PK)
-├─ residente_id (UUID, FK → residentes.id, NOT NULL)
-├─ usuario_id (UUID, FK → perfiles_usuarios.id, NOT NULL)
-├─ tipo_situacion (VARCHAR 100, CHECK: Violencia/Crisis Emocional/Accidente/Fuga/Emergencia Sanitaria)
-├─ descripcion (TEXT, NOT NULL)
-├─ fecha_hora (TIMESTAMPTZ, DEFAULT NOW())
-└─ created_at (TIMESTAMPTZ, DEFAULT NOW())
-```
-
-**Propósito:** Registros críticos/emergencia  
-**Mapeo F6:** ✅ Situación crítica  
-**Trazabilidad legal:** ✅ Presente  
-**Validación:** ✅ Correcta
-
-**Notas:**
-- 5 tipos críticos estrictos (excelente)
-- ON DELETE RESTRICT para ambas FK (protege auditoría legal)
-- fecha_hora con valor legal
-
----
-
-## 🔗 MAPEO: MODELO ↔ FEATURES
-
-| Feature | Tablas Involucradas | Coverage | Status |
-|---------|-------------------|----------|--------|
-| **F1** — Consultar residentes | residentes | ✅ 100% | OK |
-| **F2** — Registrar novedades | novedades, perfiles_usuarios, residentes | ✅ 100% | OK |
-| **F3** — Consultar historial | novedades, situaciones_criticas | ✅ 100% | OK |
-| **F4** — Registrar actividades | actividades_diarias, residentes | ✅ 100% | OK |
-| **F5** — Consultar turno | turnos_trabajo, residentes_turnos, novedades, actividades_diarias | ✅ 100% | OK |
-| **F6** — Situación crítica | situaciones_criticas, residentes, perfiles_usuarios | ✅ 100% | OK |
-
----
-
-## ✅ VALIDACIÓN CONTRA CRITERIOS DE ACEPTACIÓN (CA)
-
-### F1: Consultar Residentes (CA-01 a CA-07)
+### `nnya` (residentes)
+Entidad central de la web. Mobile agrega tres columnas (migración `20260514000003` + `20260912000035`):
 
 ```
-CA-01: Listar residentes asignados
-  → SELECT * FROM residentes WHERE id IN (SELECT residente_id FROM residentes_turnos WHERE turno_id = ?)
-  ✅ Tabla residentes + join residentes_turnos
-
-CA-02 a CA-07: Datos de residente (nombre, edad, estado, foto, etc)
-  → Todos presentes en tabla residentes
-  ✅ Válido
+id, nombre, apellido, dni (UNIQUE), fecha_nacimiento, lugar_nacimiento, nacionalidad,
+genero, domicilio, telefono, email, escolaridad, obra_social, numero_expediente,
+activo, estado_actual, fecha_egreso, created_at, updated_at
+-- agregadas para mobile:
+foto_url             TEXT NULL
+alertas_importantes  TEXT NULL
+turno_escolar        VARCHAR(50) NULL  CHECK (NULL o 'Mañana','Tarde','Noche','Doble Jornada')
 ```
 
----
+- Baja lógica con `activo`; nunca se borra un NNyA.
+- La edad se calcula en el cliente desde `fecha_nacimiento`.
+- El DNI está en texto plano (decisión documentada en la web).
 
-### F2: Registrar Novedades (CA-08 a CA-17)
-
-```
-CA-08: Crear novedad
-  → INSERT INTO novedades (residente_id, usuario_id, tipo_novedad, descripcion)
-  ✅ Tabla novedades
-
-CA-09: Timestamp automático
-  → fecha_hora DEFAULT NOW()
-  ✅ Válido
-
-CA-12: Validación de campos
-  → CHECK (tipo_novedad IN (...))
-  ✅ Válido
-
-CA-13-17: Validaciones adicionales
-  → descripcion NOT NULL
-  ✅ Válido
-```
-
----
-
-### F3: Consultar Historial (CA-18 a CA-24)
+### `novedades` (nueva, de mobile — migración `20260912000036`)
 
 ```
-CA-18: Timeline cronológica
-  → SELECT * FROM novedades WHERE residente_id = ? ORDER BY fecha_hora DESC
-  ✅ Índice: idx_novedades_residente_fecha
-
-CA-19-24: Detalles, filtros, estados
-  → Todos presentes en novedades + situaciones_criticas
-  ✅ Válido
+id UUID PK, nnya_id UUID NOT NULL → nnya, usuario_id UUID NULL → usuarios (ON DELETE SET NULL),
+tipo VARCHAR(50) NOT NULL CHECK IN ('Salud','Educación','Comportamiento','Alimentación',
+                                    'Visita Familiar','Otro'),
+descripcion TEXT NOT NULL, fecha_hora TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+created_at, updated_at
+Índice: idx_novedades_nnya_fecha (nnya_id, fecha_hora DESC)
+RLS: Admin y Equipo Tecnico
 ```
 
----
-
-### F4: Registrar Actividades (CA-25 a CA-32)
+### `actividades` (compartida con la web)
 
 ```
-CA-25: Crear actividad
-  → INSERT INTO actividades_diarias (residente_id, tipo_actividad, ...)
-  ✅ Tabla actividades_diarias
-
-CA-26: Tipos válidos (6)
-  → CHECK (tipo_actividad IN ('Colegio', 'Recreativa', ...))
-  ✅ Válido
-
-CA-28: Estado realizada/pendiente
-  → realizada BOOLEAN DEFAULT FALSE
-  ✅ Válido
+id, titulo NOT NULL, descripcion, tipo NOT NULL, fecha DATE NOT NULL, hora_inicio, hora_fin,
+lugar, responsable_id → usuarios, nnya_ids UUID[] NOT NULL (grupal, sin legajo_id),
+estado CHECK IN ('programada','en_curso','realizada','cancelada') DEFAULT 'programada',
+observaciones, created_by → usuarios, created_at, updated_at
 ```
 
----
+Mobile filtra por `nnya_ids` (`contains`). Al crear, completa `titulo` (etiqueta del tipo) y `fecha` (hoy), que son NOT NULL en la base.
 
-### F5: Consultar Turno (CA-33 a CA-40)
-
-```
-CA-33: Ver turno actual
-  → SELECT * FROM turnos_trabajo JOIN residentes_turnos...
-  ✅ Tablas turnos_trabajo + residentes_turnos
-
-CA-36: Novedades 24h
-  → SELECT * FROM novedades WHERE fecha_hora > NOW() - INTERVAL '24 hours'
-  ✅ Válido
-
-CA-37-40: Tareas pendientes
-  → SELECT * FROM actividades_diarias WHERE realizada = false
-  ✅ Válido
-```
-
----
-
-### F6: Situación Crítica (CA-41 a CA-51)
+### `incidentes` (compartida con la web; es la "situación crítica" de mobile)
 
 ```
-CA-41: Crear reporte crítico
-  → INSERT INTO situaciones_criticas (residente_id, usuario_id, tipo_situacion, ...)
-  ✅ Tabla situaciones_criticas
-
-CA-43: 5 tipos estrictos
-  → CHECK (tipo_situacion IN ('Violencia', 'Crisis Emocional', ...))
-  ✅ Válido
-
-CA-45: Trazabilidad legal
-  → fecha_hora TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  ✅ Válido
+id, nnya_id NOT NULL → nnya, legajo_id → legajos (NOT NULL desde la migración
+20260915193141), tipo NOT NULL, descripcion NOT NULL, fecha_hora DEFAULT NOW(),
+gravedad CHECK IN ('leve','media','grave','critico') DEFAULT 'media',
+reportado_por → usuarios (ON DELETE SET NULL), acciones_tomadas,
+estado CHECK IN ('abierto','en_seguimiento','cerrado') DEFAULT 'abierto',
+gravedad_sugerida, sugerencia_aceptada, created_at, updated_at
 ```
 
----
+Mobile inserta una fila por NNyA seleccionado, con `nnya_id`, `legajo_id`, `tipo`, `descripcion`, `acciones_tomadas` y `reportado_por`. El `legajo_id` se resuelve consultando `legajos` con `estado = 'activo'` (hay un solo legajo activo por NNyA, índice único `uq_legajo_activo_por_nnya`). Si un NNyA no tiene legajo activo, la app no guarda y muestra un aviso.
 
-## 🚀 ÍNDICES DE RENDIMIENTO
+> Verificado en las migraciones del repo web; no se pudo confirmar contra la base en vivo (la conexión dio timeout). Ante un error de `legajo_id` al reportar, revisar `information_schema.columns`.
 
-```sql
-✅ idx_novedades_residente_fecha (residente_id, fecha_hora DESC)
-   → Consultas de historial óptimas
+### `usuarios` y `roles`
+`usuarios` (`id`, `auth_user_id`, `nombre`, `apellido`, `activo`, rol) y `roles` (`nombre`). Roles vigentes: **`Admin`** y **`Equipo Tecnico`**. `authStore` rechaza el ingreso si el usuario está inactivo o su rol no está permitido.
 
-✅ idx_criticas_residente_fecha (residente_id, fecha_hora DESC)
-   → Consultas de situaciones críticas óptimas
-
-✅ idx_actividades_residente_fecha (residente_id, fecha)
-   → Consultas diarias de actividades óptimas
-```
-
-**Análisis:** Índices bien pensados para queries más comunes  
-**Status:** ✅ Suficientes para MVP
-
----
-
-## 🔐 SEGURIDAD Y AUDITORÍA
-
-### Restricciones de Integridad Referencial
+### `audit_log` (compartido con la web)
 
 ```
-perfiles_usuarios → auth.users
-  ON DELETE CASCADE (si usuario se elimina, sus registros se borran)
-  ⚠️ CONSIDER: Cambiar a RESTRICT para auditoría
-
-novedades → perfiles_usuarios
-  ON DELETE RESTRICT (protege auditoría)
-  ✅ Correcto
-
-situaciones_criticas → perfiles_usuarios
-  ON DELETE RESTRICT (protege valor legal)
-  ✅ Correcto
-
-*_* → residentes
-  ON DELETE CASCADE (limpieza si NNA se elimina)
-  ✅ Correcto
+id BIGSERIAL, tabla, operacion CHECK IN ('INSERT','UPDATE','DELETE'), id_registro,
+datos_antes JSONB, datos_despues JSONB, auth_uid UUID, fecha TIMESTAMPTZ
 ```
 
-### Trazabilidad
+`fn_audit_trigger()` lo completa automáticamente. Solo `Admin` puede leerlo; nadie puede editarlo ni borrarlo.
 
-```
-✅ created_at en todas las tablas
-✅ fecha_hora automático en novedades
-✅ fecha_hora automático en situaciones_criticas
-✅ usuario_id registra quién creó/modificó
-```
+## Seguridad y RLS
 
-**Status:** ✅ Excelente auditoría
+- RLS activo en todas las tablas; las políticas de negocio permiten a `Admin` y `Equipo Tecnico`.
+- **Hoy no existe restricción por asignación**: ambos roles ven todos los NNyA. No asumir un filtro "residentes asignados".
+- `nnya_id` usa `ON DELETE RESTRICT` en las tablas de negocio (`prompts/025` de la web): no se puede borrar un NNyA con historial.
+- Mobile solo usa la **anon key**; la `service_role` nunca sale del servidor de la web.
 
----
+## Checklist al tocar la base desde mobile
 
-## ⚠️ OBSERVACIONES Y MEJORAS SUGERIDAS
-
-### 1. **Tabla perfiles_usuarios - ON DELETE CASCADE**
-
-**Actual:**
-```sql
-id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE
-```
-
-**Sugerencia:**
-```sql
-id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE RESTRICT
-```
-
-**Razón:** Si un educador se elimina de auth.users, sus registros en novedades, actividades, y situaciones_criticas se orfanan. Mejor RESTRICT para proteger auditoría.
-
----
-
-### 2. **Campo de Modificación (update_at)**
-
-**Actual:** No hay campo para registrar cuándo se modifica un registro.
-
-**Sugerencia:** Agregar a todas las tablas:
-```sql
-updated_at TIMESTAMPTZ DEFAULT NOW() ON UPDATE NOW()
--- O usando trigger de PostgreSQL
-```
-
-**Razón:** Auditoría completa de cambios (no solo creación).
-
----
-
-### 3. **Tabla de Auditoría Central**
-
-**Sugerencia:** Crear tabla `audit_log` para registrar TODOS los cambios:
-
-```sql
-CREATE TABLE audit_log (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  tabla_nombre VARCHAR(100) NOT NULL,
-  registro_id UUID NOT NULL,
-  operacion VARCHAR(20) CHECK (operacion IN ('CREATE', 'UPDATE', 'DELETE')),
-  usuario_id UUID NOT NULL REFERENCES perfiles_usuarios(id),
-  datos_previos JSONB NULL,
-  datos_nuevos JSONB NULL,
-  fecha_hora TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-**Razón:** Requisito legal para residencias de NNA.  
-**Status:** No presente en el modelo actual (⚠️ IMPORTANTE)
-
----
-
-### 4. **Soft Deletes para Datos Sensibles**
-
-**Sugerencia:** Agregar columnas `deleted_at` en tablas críticas:
-
-```sql
--- En residentes, novedades, situaciones_criticas
-deleted_at TIMESTAMPTZ NULL DEFAULT NULL
-```
-
-**Razón:** Nunca eliminar datos de menores de edad (requisito legal).  
-**Status:** No presente en el modelo actual (⚠️ IMPORTANTE)
-
----
-
-### 5. **Cifrado de Datos Sensibles**
-
-**Actual:** No hay indicación de cifrado en campos sensibles.
-
-**Sugerencia:** Cifrar campos en aplicación:
-```
-- alertas_importantes (alergias, etc)
-- observaciones_autorizadas (datos sensibles)
-- descripcion en novedades/situaciones_criticas (si contiene datos sensibles)
-```
-
-**Status:** Debe manejarse en aplicación, no en BD (Supabase permite)
-
----
-
-## 🔄 RELACIONES Y CARDINALIDADES
-
-```
-perfiles_usuarios (1) ──→ (N) novedades
-perfiles_usuarios (1) ──→ (N) actividades_diarias
-perfiles_usuarios (1) ──→ (N) situaciones_criticas
-
-residentes (1) ──→ (N) novedades
-residentes (1) ──→ (N) actividades_diarias
-residentes (1) ──→ (N) situaciones_criticas
-residentes (M) ──→ (N) turnos_trabajo (via residentes_turnos)
-
-turnos_trabajo (1) ──→ (N) residentes (via residentes_turnos)
-```
-
-**Validación:** ✅ Todas las relaciones son correctas
-
----
-
-## 📊 NORMALIZACIÓN
-
-```
-Tabla perfiles_usuarios:
-├─ 1NF: ✅ Sí (atributos atómicos)
-├─ 2NF: ✅ Sí (dependencia funcional)
-└─ 3NF: ✅ Sí (sin dependencias transitivas)
-
-Tabla residentes:
-├─ 1NF: ✅ Sí
-├─ 2NF: ✅ Sí
-└─ 3NF: ✅ Sí
-
-Tabla novedades:
-├─ 1NF: ✅ Sí
-├─ 2NF: ✅ Sí
-└─ 3NF: ✅ Sí
-
-... (todas normalizadas correctamente)
-```
-
-**Validación:** ✅ Modelo bien normalizado
-
----
-
-## ✅ CHECKLIST FINAL
-
-- [x] 7 tablas definidas y coherentes
-- [x] Mapeo con 6 Features completo (F1-F6)
-- [x] 51 criterios de aceptación cubiertos
-- [x] Script DDL incluido (PostgreSQL)
-- [x] Índices de rendimiento presentes
-- [x] Restricciones CHECK validando datos
-- [x] Integridad referencial mediante FK
-- [x] Auditoría básica (timestamps)
-- [x] Nomenclatura clara y consistente
-- [ ] Auditoría centralizada (NO presente)
-- [ ] Soft deletes (NO presente)
-- [ ] Cifrado de datos (debe ser en app)
-- [ ] ON DELETE CASCADE en perfiles_usuarios (RIESGO)
-
----
-
-## 📋 RECOMENDACIONES DE IMPLEMENTACIÓN
-
-### Inmediato (MVP):
-```
-✅ Usar script DDL como está
-✅ Implementar los 7 índices
-✅ Aplicar en Supabase PostgreSQL
-✅ Ejecutar script en producción
-```
-
-### Post-MVP (Iteración 2):
-```
-⚠️ Agregar tabla audit_log
-⚠️ Cambiar ON DELETE CASCADE → RESTRICT en perfiles_usuarios
-⚠️ Agregar soft deletes (deleted_at)
-⚠️ Implementar cifrado de datos sensibles
-```
-
----
-
-## 🎯 CONCLUSIÓN
-
-**El modelo de datos es VÁLIDO y COMPLETO para MVP.**
-
-Proporciona:
-- ✅ Cobertura total de Features (F1-F6)
-- ✅ Auditoría básica funcional
-- ✅ Rendimiento optimizado
-- ✅ Integridad de datos garantizada
-- ✅ Script DDL production-ready
-
-**Recomendación:** Usar como está para MVP, mejorar auditoría en iteración 2.
-
----
-
-## 📁 PRÓXIMOS PASOS
-
-1. ✅ Copiar script DDL a Supabase
-2. ✅ Ejecutar migrations en dev/prod
-3. ✅ Configurar RLS policies por rol (Supabase)
-4. ✅ Crear vistas para queries comunes
-5. ✅ Conectar mobile app a base de datos
-
----
-
-**Status: ✅ APROBADO PARA DESARROLLO**
-
+- [ ] La tabla y las columnas existen en `../../arguello-infancias/supabase/migrations/` (o en la migración de mobile correspondiente).
+- [ ] Los campos NOT NULL que la UI no pide se completan en el hook.
+- [ ] La operación está permitida por la política RLS del rol.
+- [ ] El cambio queda en `audit_log` (verificar con un rol `Admin`).
+- [ ] Un cambio de schema se hace como migración en el repo web, no desde la app.

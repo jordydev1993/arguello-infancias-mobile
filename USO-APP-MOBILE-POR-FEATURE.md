@@ -14,19 +14,18 @@ del MVP, para exponer/demostrar la app (todas conectadas a datos reales de Supab
    de prueba fijo — la autenticación es real contra Supabase).
 3. Al ingresar, la sesión queda persistida en el dispositivo (`expo-secure-store`) hasta cerrar
    sesión desde **Perfil**.
-4. El acceso a residentes está limitado por rol: un educador solo ve los NNA que tiene asignados;
-   un rol con más permisos (Admin / Equipo Técnico) ve todo. Este control lo aplica la base de
-   datos (RLS), no la pantalla.
+4. El acceso está limitado por rol: solo ingresan los roles **Admin** y **Equipo Técnico**, y ambos
+   ven todos los NNA. Este control lo aplica la base de datos (RLS), no la pantalla.
 
 **Navegación principal (tabs):** Inicio · Residentes · Mi turno · Crítica · Perfil.
 
 ---
 
-## 1. F1 — Consultar residentes asignados
+## 1. F1 — Consultar residentes
 
 **Dónde:** tab **Residentes**.
 
-1. Al entrar se lista cada NNA asignado (nombre, foto/inicial, edad) en tarjetas (`ResidentCard`).
+1. Al entrar se lista cada NNA (nombre, foto/inicial, edad) en tarjetas (`ResidentCard`).
 2. Tocar una tarjeta abre el **detalle del residente**, con 4 pestañas: **Info · Novedades ·
    Historial · Actividades**.
 3. La pestaña **Info** muestra: nombre completo, fecha de nacimiento, edad calculada, obra
@@ -94,12 +93,12 @@ Mismo patrón de 3 pasos que F2:
 
 **Dónde:** tab **Mi turno** (y un resumen reducido en **Inicio**).
 
-1. Encabezado con el horario del turno del educador logueado y su estado (*Por iniciar / Activo /
+1. Encabezado con el horario del turno del usuario logueado y su estado (*Por iniciar / Activo /
    Finalizado*), y la cantidad de NNA a cargo.
    > El horario en sí es un dato de ejemplo: la tabla de turnos de personal todavía no tiene datos
    > cargados en producción — el resto de la pantalla sí es información real.
 2. **Novedades relevantes (24 h):** todas las novedades registradas en las últimas 24 horas para
-   los residentes del educador, sin importar quién las cargó. Tocar una abre su detalle (mismo
+   todos los residentes, sin importar quién las cargó. Tocar una abre su detalle (mismo
    detalle de solo lectura que en F3).
 3. **Actividades de hoy:** todas las actividades del día, con su estado (badge Pendiente/
    Realizada/No realizada). Tocar una abre su detalle.
@@ -125,6 +124,8 @@ app), o el botón rojo "Reportar situación crítica" en Inicio.
      sanitaria, Otra*).
    - Descripción (obligatoria, 20 a 1000 caracteres).
    - Acciones tomadas (opcional).
+   > Requisito: cada NNA seleccionado debe tener un **legajo activo** (la base lo exige en
+   > `incidentes.legajo_id`). Si no lo tiene, la app avisa y no guarda hasta que se abra el legajo.
 3. **Confirmación:** resumen con los NNA seleccionados, tipo, descripción, acciones tomadas (si
    se cargaron), fecha/hora y usuario. Botón **Confirmar reporte** (o volver a editar).
 4. **Éxito** → el reporte queda guardado con auditoría automática y visible en el Historial (F3)
@@ -134,7 +135,7 @@ app), o el botón rojo "Reportar situación crítica" en Inicio.
 
 ## 7. Perfil
 
-Tab **Perfil**: muestra nombre, rol (Admin / Administrador / Equipo Técnico — roles reales
+Tab **Perfil**: muestra nombre, rol (Admin / Equipo Técnico — roles reales
 compartidos con el sistema web) y correo de la sesión actual, y el botón para **cerrar sesión**
 (con confirmación).
 

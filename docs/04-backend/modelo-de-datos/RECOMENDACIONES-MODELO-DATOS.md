@@ -1,5 +1,8 @@
 # 🎯 RECOMENDACIONES TÉCNICAS — Modelo de Datos
 
+> **Nota de alineación (2026-09-21):** este documento es anterior a la alineación con el sistema web y puede describir el modelo previo (tablas `residentes`, `perfiles_usuarios`, `situaciones_criticas`, roles educador/coordinador, API Express). Vigente: `mobile/AGENTS.md`, `AGENTS.md` (raíz), `mobile/skills/database.md` y las migraciones de `arguello-infancias/supabase/migrations/`. Se conserva como registro histórico.
+
+
 **Para implementación en Argüello Infancias Mobile MVP**
 
 ---

@@ -2,6 +2,8 @@
 
 **Actualizado:** 2026-08-31 · Todos los enlaces de abajo apuntan a archivos que existen.
 
+> **Nota de alineación (2026-09-21):** la app móvil comparte base de datos, cuentas y roles (`Admin`, `Equipo Tecnico`) con el sistema web y accede a Supabase directo (sin Express). Los documentos de `docs/` son especificación histórica: donde difieran de `AGENTS.md`, `skills/database.md` o de las migraciones de `arguello-infancias/`, mandan estos últimos. Los archivos más afectados llevan una nota al inicio.
+
 Reglas del proyecto y contratos → **[`/AGENTS.md`](../AGENTS.md)** (raíz).
 Herramientas de referencia → **[`/skills/`](../skills/README.md)**.
 Historial de planes → **[`/prompts/`](../prompts/)**.
@@ -35,7 +37,7 @@ Historial de planes → **[`/prompts/`](../prompts/)**.
 
 | Archivo | Qué es |
 |---|---|
-| [`README.md`](04-backend/README.md) | Puntero → [`/skills/database.md`](../skills/database.md) (modelo de datos validado) |
+| [`README.md`](04-backend/README.md) | Puntero → [`/skills/database.md`](../skills/database.md) (modelo de datos que consume mobile) |
 | [`modelo-de-datos/`](04-backend/modelo-de-datos/) | Material de trabajo del modelado (correcciones, recomendaciones, resúmenes) |
 
 ## 05 · Integración — [`05-integracion/`](05-integracion/)
