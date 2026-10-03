@@ -9,7 +9,6 @@ import { iniciales } from '@/utils/formatters';
 
 const ROLE_LABEL: Record<string, string> = {
   Admin: 'Admin',
-  Administrador: 'Administrador/a',
   'Equipo Tecnico': 'Equipo Técnico',
 };
 

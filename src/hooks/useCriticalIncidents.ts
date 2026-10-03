@@ -42,6 +42,9 @@ function toCriticalIncident(row: IncidentRow): CriticalIncident {
  * tabla real `incidentes` vincula un solo `nnya_id` por fila — ver PLAN 08).
  * `reportado_por` es siempre el usuario logueado; `gravedad`/`estado` quedan
  * en su default de la DB (`media`/`abierto`), no se piden en el form.
+ * `incidentes.legajo_id` es NOT NULL en la base (migración web 20260915193141):
+ * se resuelve el legajo activo de cada NNA (hay uno solo por NNA, índice
+ * `uq_legajo_activo_por_nnya`).
  */
 export function useCreateCriticalIncident() {
   const { user } = useAuth();
@@ -49,8 +52,26 @@ export function useCreateCriticalIncident() {
 
   return useMutation<CriticalIncident[], Error, NewCriticalIncident>({
     mutationFn: async (input) => {
+      const { data: legajos, error: legajoError } = await getSupabase()
+        .from('legajos')
+        .select('id, nnya_id')
+        .in('nnya_id', input.nnya_ids)
+        .eq('estado', 'activo');
+      if (legajoError) throw legajoError;
+
+      const legajoPorNnya = new Map((legajos ?? []).map((l) => [l.nnya_id as string, l.id as string]));
+      const sinLegajo = input.nnya_ids.filter((id) => !legajoPorNnya.has(id));
+      if (sinLegajo.length > 0) {
+        throw new Error(
+          sinLegajo.length === 1
+            ? 'El NNA seleccionado no tiene un legajo activo. Pedile a Dirección o al Equipo Técnico que abra el legajo antes de reportar.'
+            : `${sinLegajo.length} de los NNA seleccionados no tienen un legajo activo. Pedile a Dirección o al Equipo Técnico que abra sus legajos antes de reportar.`,
+        );
+      }
+
       const rows = input.nnya_ids.map((nnya_id) => ({
         nnya_id,
+        legajo_id: legajoPorNnya.get(nnya_id)!,
         tipo: input.tipo,
         descripcion: input.descripcion,
         acciones_tomadas: input.acciones_tomadas || null,

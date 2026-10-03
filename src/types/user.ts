@@ -1,5 +1,5 @@
 /** Roles reales de `roles.nombre` con acceso permitido a mobile (decisión #1). */
-export type UserRole = 'Admin' | 'Administrador' | 'Equipo Tecnico';
+export type UserRole = 'Admin' | 'Equipo Tecnico';
 
 export type User = {
   /** usuarios.id (no el uid de auth.users). */

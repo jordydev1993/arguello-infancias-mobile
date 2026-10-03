@@ -5,7 +5,7 @@ import { getSupabase, isSupabaseConfigured } from '@/lib/supabase';
 
 type LoginResult = { ok: true } | { ok: false; error: string };
 
-const ALLOWED_ROLES: UserRole[] = ['Admin', 'Administrador', 'Equipo Tecnico'];
+const ALLOWED_ROLES: UserRole[] = ['Admin', 'Equipo Tecnico'];
 
 type AuthState = {
   user: User | null;
