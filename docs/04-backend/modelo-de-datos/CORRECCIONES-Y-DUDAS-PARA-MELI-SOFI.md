@@ -22,7 +22,7 @@ Verifiqué el schema real corriendo `list_tables` / consultas directas contra el
 
 | Propuesto en el docx | Ya existe en la web | Corrección |
 |---|---|---|
-| `perfiles_usuarios` (id = auth.users, `rol` CHECK educador/coordinador) | `usuarios` + `roles` (rol normalizado vía `rol_id` FK, `auth_user_id` nullable — **no** `id = auth.users(id)` directo) | **No crear `perfiles_usuarios`.** Reusar `usuarios`/`roles`. Decisión #1 (§3): `Equipo Tecnico` ≈ educador, `Admin`/`Administrador` ≈ coordinador — no se agregan roles nuevos. |
+| `perfiles_usuarios` (id = auth.users, `rol` CHECK educador/coordinador) | `usuarios` + `roles` (rol normalizado vía `rol_id` FK, `auth_user_id` nullable — **no** `id = auth.users(id)` directo) | **No crear `perfiles_usuarios`.** Reusar `usuarios`/`roles`. Decisión #1 (§3): `Equipo Tecnico` ≈ educador, `Admin` ≈ coordinador — no se agregan roles nuevos. (Desde el 03/10/2026 solo existen `Admin` y `Equipo Tecnico`.) |
 | `residentes` (nombre, foto_url, fecha_nacimiento, escuela, turno_escolar, alertas_importantes) | `nnya` (18 columnas: dni, nacionalidad, domicilio, escolaridad, obra_social, numero_expediente, estado_actual, fecha_egreso...) | **No crear `residentes`.** Reusar `nnya`. Agregar como columnas nuevas (migración, no tabla nueva): `foto_url`, `alertas_importantes`, `turno_escolar`. |
 | `turnos_trabajo` + `residentes_turnos` | `turnos_personal` (usuario_id, fecha, turno, hora_inicio/cierre, y **traspaso de guardia**: entregado_por/at, recibido_por/at) | **No crear `turnos_trabajo`.** `turnos_personal` ya cubre el concepto y es más completo (maneja el handover entre guardias, que el docx no contempla). `residentes_turnos` **no se crea** — decisión #2 (§3): la guardia atiende a todos los residentes, no hay asignación individual. |
 | `novedades` | No hay equivalente exacto | **Es genuinamente nueva.** `intervenciones`/`informes` son registros formales de legajo; `novedades` es un diario liviano en tiempo real, un caso de uso distinto. Sí crearla, pero con la columna `nnya_id` (no `residente_id`) para no romper la convención de nombres del resto de la base. |
@@ -38,7 +38,7 @@ Verifiqué el schema real corriendo `list_tables` / consultas directas contra el
 
 Decisión de Jordy. Quedan cerradas; el resto de este documento y `RECOMENDACIONES-MODELO-DATOS.md`/`RESUMEN-SESION-MODELO-DATOS.md`/`CORRECCIONES-MODELO-DATOS-ARGUELLO.md` deben reescribirse con estas 4 respuestas como base (issues #5–#8 del tablero).
 
-1. **Roles para mobile → se mapean a los roles que ya existen.** `Equipo Tecnico` ≈ educador, `Admin`/`Administrador` ≈ coordinador. **No se agregan roles nuevos.**
+1. **Roles para mobile → se mapean a los roles que ya existen.** `Equipo Tecnico` ≈ educador, `Admin` ≈ coordinador. **No se agregan roles nuevos.** (Desde el 03/10/2026 solo existen esos dos roles.)
    Evidencia que respalda esto: la web **ya hizo este mismo mapeo**. La migración `supabase/migrations/20260522000027_remove_educador_role.sql` eliminó el rol "Educador" y reasignó a esos usuarios a "Equipo Tecnico", con el comentario *"Los casos de uso del sistema definen Actor: todos"*. Mobile sigue el mismo criterio ya aplicado en producción.
 
 2. **`residentes_turnos` → no hace falta.** El personal de guardia atiende a **todos** los residentes de la residencia durante su turno, no hay asignación específica por chico.
@@ -46,7 +46,7 @@ Decisión de Jordy. Quedan cerradas; el resto de este documento y `RECOMENDACION
 
 3. **Un solo Supabase → sí, el mismo que usa la web.** Mobile pega contra el mismo proyecto (`nnya`, `usuarios`, `incidentes`, etc.), no uno separado. Esto confirma la premisa central de la sección 2: reusar en vez de duplicar aplica tal cual.
 
-4. **Arquitectura de acceso a datos → cliente directo a Supabase.** Sin API intermedia en Express. `mobile/src/lib/supabase.ts` (ya armado, sin usar todavía) es el camino correcto; RLS hace de guardia en la base, igual que en la web. La descripción de una capa Express en `AGENTS.md` § Arquitectura queda descartada — hay que corregir ese archivo (issue #8).
+4. **Arquitectura de acceso a datos → cliente directo a Supabase.** Sin API intermedia en Express. `mobile/src/lib/supabase.ts` es el camino correcto (en uso desde el PR #30); RLS hace de guardia en la base, igual que en la web. La descripción de una capa Express en `AGENTS.md` § Arquitectura queda descartada — hay que corregir ese archivo (issue #8).
 
 ---
 
