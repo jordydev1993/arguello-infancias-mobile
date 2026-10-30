@@ -111,7 +111,7 @@ Actuás como ingeniero principal de este proyecto. **El líder del equipo decide
 
 ## [5] MODELO DE DATOS
 
-**La app móvil no tiene tablas propias salvo `novedades`.** Reutiliza el modelo de la web (28 tablas). La fuente de verdad es `../arguello-infancias/supabase/migrations/` y `../arguello-infancias/AGENTS-WEB.md`.
+**La app móvil no tiene tablas propias salvo `novedades`.** Reutiliza el modelo de la web (32 tablas). La fuente de verdad es `../arguello-infancias/supabase/migrations/` y `../arguello-infancias/AGENTS-WEB.md`.
 
 ### Tablas que consume la app
 
